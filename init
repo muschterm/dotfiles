@@ -1,0 +1,306 @@
+#!/usr/bin/env sh
+
+# allow vi editing
+# set -o vi
+
+###############################################################################
+# Variables                                                                   #
+###############################################################################
+local_kernal_name="$(uname -s)"
+DF_OS_LINUX="false"
+DF_OS_WSL="false"
+DF_OS_MACOS="false"
+DF_OS_WINDOWS="false"
+case "$(uname -r)" in
+	*microsoft* )
+		DF_OS_WSL="true"
+		;;
+	* )
+		;;
+esac
+
+if [ "$local_kernal_name" = "Linux" ]; then
+	DF_OS_LINUX="true"
+
+	[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$HOME/.dotfiles.d/downloads"
+	[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="$HOME/.dotfiles.d/opt"
+	[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="$HOME/.dotfiles.d/app"
+elif [ "$local_kernal_name" = "Darwin" ]; then
+	DF_OS_MACOS="true"
+
+	[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$HOME/.dotfiles.d/downloads"
+	[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="$HOME/.dotfiles.d/opt"
+	[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="/Applications"
+elif [ "${local_kernal_name:0:5}" = "MINGW" ] || [ "${local_kernal_name:0:6}" = "CYGWIN" ]; then
+	DF_OS_WINDOWS="true"
+	: ${DEV_WINDOWS_DRIVELETTER:="c"}
+
+	[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$USERPROFILE/Downloads"
+	[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="/$DEV_WINDOWS_DRIVELETTER/dotfiles/opt"
+	[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="/$DEV_WINDOWS_DRIVELETTER/dotfiles/app"
+fi
+
+unset local_kernal_name
+
+DF_ARCH_ARM_64="false"
+DF_ARCH_ARM_32="false"
+DF_ARCH_X86_64="false"
+DF_ARCH_X86_32="false"
+
+case "$(uname -m)" in
+	arm64 | aarch64 | armv8* )
+		DF_ARCH_ARM_64="true"
+		;;
+	armv7* | armv6* )
+		DF_ARCH_ARM_32="true"
+		;;
+	x86_64 )
+		DF_ARCH_X86_64="true"
+		;;
+	i*86 )
+		DF_ARCH_X86_32="true"
+		;;
+esac
+
+[ ! -d "$DF_DOWNLOADS_HOME" ] && mkdir -p "$DF_DOWNLOADS_HOME"
+[ ! -d "$DF_SOFTWARE_HOME" ] && mkdir -p "$DF_SOFTWARE_HOME"
+
+###############################################################################
+# Aliases                                                                     #
+###############################################################################
+if [ "$DF_OS_LINUX" = "true" ]; then
+	alias open="xdg-open &>/dev/null"
+	alias copy="xclip -selection clipboard"
+elif [ "$DF_OS_MACOS" = "true" ]; then
+	alias copy="pbcopy"
+fi
+
+alias la="ls -AXl --group-directories-first"
+
+###############################################################################
+# Setup/Path                                                                  #
+###############################################################################
+if [ "$DF_OS_LINUX" = "true" ] || [ "$DF_OS_MACOS" = "true" ]; then
+	if [ "$DF_OS_LINUX" = "true" ]; then
+		local_can_use_sudo="false"
+		if [ "$(id -u)" != "0" ] && [ "$(which sudo &>/dev/null; printf -- "$?")" = "0" ]; then
+			local_can_use_sudo="true"
+		fi
+
+		if [ "$local_can_use_sudo" = "true" ] && [ ! -f "/etc/sudoers.d/${USER}" ]; then
+			printf -- "Setting up passwordless sudo!\n\n"
+
+			sudo touch "/etc/sudoers.d/${USER}"
+			sudo chmod 0777 "/etc/sudoers.d/${USER}"
+
+			cat <<- HERE > "/etc/sudoers.d/${USER}"
+			${USER} ALL=(ALL) NOPASSWD: ALL
+			HERE
+
+			sudo chmod 0440 "/etc/sudoers.d/${USER}"
+		fi
+
+		if [ "$DF_OS_WSL" = "true" ]; then
+			# always start in linux home directory
+			# the linux file system is better performing and where
+			# most, if not all, WSL work should be done
+			cd "$HOME"
+
+			# display requires host IP address to connect to x server; this is due to WSL2
+			export DISPLAY="$(cat "/etc/resolv.conf" | grep nameserver | awk -F " " '{print $2}'):0"
+			export LIBGL_ALWAYS_INDIRECT=1
+
+			if [ "$local_can_use_sudo" = "true" ]; then
+				# Mount to /<driveletter> instead of just /mnt/<driveletter> - fixes Docker mapping issues (and is better)
+				if [ -d "/mnt/c" ] && [ -d "/c" ]; then
+					sudo mount -o bind /mnt/c /c
+				fi
+
+				if [ -d "/mnt/d" ] && [ -d "/d" ]; then
+					sudo mount -o bind /mnt/d /d
+				fi
+
+				if [ -d "/mnt/e" ] && [ -d "/e" ]; then
+					sudo mount -o bind /mnt/e /e
+				fi
+
+				if [ -d "/mnt/f" ] && [ -d "/f" ]; then
+					sudo mount -o bind /mnt/f /f
+				fi
+
+				if [ -d "/mnt/g" ] && [ -d "/g" ]; then
+					sudo mount -o bind /mnt/g /g
+				fi
+			fi
+		fi
+
+		unset local_can_use_sudo
+	fi
+
+	if [ "$DF_OS_MACOS" = "true" ]; then
+		if [ "$(which brew &>/dev/null; printf -- "$?")" = "0" ]; then
+			local_brew_prefix="$(brew --prefix)"
+			[ -r "${local_brew_prefix}/etc/profile.d/bash_completion.sh" ] && . "${local_brew_prefix}/etc/profile.d/bash_completion.sh"
+
+			# GNU coreutils
+			export PATH="${local_brew_prefix}/opt/coreutils/libexec/gnubin:$PATH"
+			export MANPATH="${local_brew_prefix}/opt/coreutils/libexec/gnuman:$MANPATH"
+			if [ ! -d "${local_brew_prefix}/opt/coreutils/libexec/gnubin" ]; then
+				cat <<- HERE
+				Homebrew 'coreutils' not installed!
+
+				HERE
+
+				brew install coreutils
+
+				cat <<- HERE
+				Homebrew 'coreutils' installed!
+
+				HERE
+			fi
+
+			# GNU sed
+			export PATH="${local_brew_prefix}/opt/gnu-sed/libexec/gnubin:$PATH"
+			export MANPATH="${local_brew_prefix}/opt/gnu-sed/libexec/gnuman:$MANPATH"
+			if [ ! -d "${local_brew_prefix}/opt/gnu-sed/libexec/gnubin" ]; then
+				cat <<- HERE
+				Homebrew 'gnu-sed' not installed!
+
+				HERE
+
+				brew install gnu-sed
+
+				cat <<- HERE
+				Homebrew 'gnu-sed' installed!
+
+				HERE
+			fi
+
+			# GNU tar
+			export PATH="${local_brew_prefix}/opt/gnu-tar/libexec/gnubin:$PATH"
+			export MANPATH="${local_brew_prefix}/opt/gnu-tar/libexec/gnuman:$PATH"
+			if [ ! -d "${local_brew_prefix}/opt/gnu-tar/libexec/gnubin" ]; then
+				cat <<- HERE
+				Homebrew 'gnu-tar' not installed!
+
+				HERE
+
+				brew install gnu-tar
+
+				cat <<- HERE
+				Homebrew 'gnu-tar' installed!
+
+				HERE
+			fi
+
+			# gpg
+			# if [ ! -d "${local_brew_prefix}/opt/gpg/bin" ]; then
+			# 	cat <<- HERE
+			# 	Homebrew 'gpg' not installed!
+
+			# 	HERE
+
+			# 	brew install gpg
+
+			# 	cat <<- HERE
+			# 	Homebrew 'gpg' installed!
+
+			# 	HERE
+			# fi
+
+			# jq (for handling JSON)
+			if [ ! -d "${local_brew_prefix}/opt/jq/bin" ]; then
+				cat <<- HERE
+				Homebrew 'jq' not installed!
+
+				HERE
+
+				brew install jq
+
+				cat <<- HERE
+				Homebrew 'jq' installed!
+
+				HERE
+			fi
+
+			# python3
+			if [ ! -d "${local_brew_prefix}/opt/python3" ]; then
+				cat <<- HERE
+				Homebrew 'python' not installed!
+
+				HERE
+
+				brew install python
+
+				cat <<- HERE
+				Homebrew 'python' installed!
+
+				HERE
+			fi
+
+			# rq (for handling YAML and XML)
+			if [ ! -f "${local_brew_prefix}/bin/yq" ]; then
+				cat <<- HERE
+				pip 'yq' not installed!
+
+				HERE
+
+				pip3 install yq
+
+				cat <<- HERE
+				pip 'yq' installed!
+
+				HERE
+			fi
+
+			# HTTPie (for handling http REST calls)
+			if [ ! -d "${local_brew_prefix}/opt/httpie/bin" ]; then
+				cat <<- HERE
+				Homebrew 'httpie' not installed!
+
+				HERE
+
+				brew install httpie
+
+				cat <<- HERE
+				Homebrew 'httpie' installed!
+
+				HERE
+			fi
+
+			unset local_brew_prefix
+		fi
+
+		if [ -n "$BASH_VERSION" ]; then
+			# Docker
+			: ${DF_DOCKER_APP_HOME:="/Applications/Docker.app"}
+			[ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker.bash-completion" ] && . "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker.bash-completion"
+			[ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-machine.bash-completion" ] && . "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-machine.bash-completion"
+			[ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-compose.bash-completion" ] && . "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-compose.bash-completion"
+		
+			# Git
+			[ -r "/Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash" ] && . "/Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash"
+		fi
+	fi
+fi
+
+###############################################################################
+# PS1                                                                         #
+###############################################################################
+. "$DOTFILES_DIR/scripts/shell-format.sh"
+
+###############################################################################
+# Functions                                                                   #
+###############################################################################
+. "$DOTFILES_DIR/scripts/helper-functions.sh"
+
+###############################################################################
+## Software                                                                   #
+###############################################################################
+. "$DOTFILES_DIR/scripts/setup-sdkman.sh"
+. "$DOTFILES_DIR/scripts/setup-java.sh"
+. "$DOTFILES_DIR/scripts/setup-nodejs.sh"
+. "$DOTFILES_DIR/scripts/setup-golang.sh"
+. "$DOTFILES_DIR/scripts/setup-jb-toolbox.sh"
+. "$DOTFILES_DIR/scripts/setup-vscode.sh"
+. "$DOTFILES_DIR/scripts/setup-sublime.sh"

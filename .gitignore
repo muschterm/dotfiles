@@ -1,0 +1,14 @@
+# MacOS
+.DS_Store
+
+# Gradle
+.gradle
+build
+
+# Maven
+target
+
+# IntelliJ
+.idea
+*.iml
+out
