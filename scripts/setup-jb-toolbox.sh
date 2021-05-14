@@ -2,7 +2,7 @@
 
 : ${DF_SETUP_JB_TOOLBOX:="false"}
 if [ "$DF_SETUP_JB_TOOLBOX" = "true" ]; then
-	: ${DF_JB_TOOLBOX_VERSION:="1.17.7275"}
+	: ${DF_JB_TOOLBOX_VERSION:="1.20.8352"}
 
 	(
 		if [ ! -f "$DF_APP_HOME/jetbrains-toolbox" ] && [ ! -d "$DF_APP_HOME/JetBrains Toolbox.app" ]; then

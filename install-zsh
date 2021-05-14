@@ -23,7 +23,7 @@ elif [ "$(uname -s)" = "Linux" ] || [ "$(uname -s)" = "Darwin" ]; then
 		touch "$HOME/.zshrc"
 	fi
 
-	zshrc_line="$(grep -n "export DOTFILES_DIR" "$HOME/.zshrc" | awk -F ":" '{print $1}')"
+	zshrc_line="$(grep -n ".dotfiles.zsh" "$HOME/.zshrc" | awk -F ":" '{print $1}')"
 
 	if [ ! -z "$zshrc_line" ]; then
 		# delete old lines in .zshrc
@@ -31,12 +31,29 @@ elif [ "$(uname -s)" = "Linux" ] || [ "$(uname -s)" = "Darwin" ]; then
 		sed "${zshrc_line},${zshrc_line}d" "$HOME/.zshrc.bak" > "$HOME/.zshrc"
 	fi
 
-	# add to top of .zshrc
-	cat <<- HERE > "$HOME/.zshrc.tmp"
+	# add to bottom of .zshrc
+	cat <<- HERE >> "$HOME/.zshrc"
+	[ -f "\$HOME/.dotfiles.zsh" ] && . "\$HOME/.dotfiles.zsh"
+	HERE
+
+	if [ ! -f "$HOME/.dotfiles.zsh" ]; then
+		touch "$HOME/.dotfiles.zsh"
+	fi
+
+	dotfiles_zsh_line="$(grep -n "export DOTFILES_DIR" "$HOME/.dotfiles.zsh" | awk -F ":" '{print $1}')"
+
+	if [ ! -z "$dotfiles_zsh_line" ]; then
+		# delete old lines in .dotfiles.zsh
+		mv "$HOME/.dotfiles.zsh" "$HOME/.dotfiles.zsh.bak"
+		sed "${dotfiles_zsh_line},${dotfiles_zsh_line}d" "$HOME/.dotfiles.zsh.bak" > "$HOME/.dotfiles.zsh"
+	fi
+
+	# add to top of .dotfiles.zsh
+	cat <<- HERE > "$HOME/.dotfiles.zsh.tmp"
 	export DOTFILES_DIR="$dotfiles_dir"; [ -f "\$DOTFILES_DIR/init" ] && . "\$DOTFILES_DIR/init"; autoload -Uz compinit && compinit
 	HERE
-	cat "$HOME/.zshrc" >> "$HOME/.zshrc.tmp"
-	mv "$HOME/.zshrc.tmp" "$HOME/.zshrc"
+	cat "$HOME/.dotfiles.zsh" >> "$HOME/.dotfiles.zsh.tmp"
+	mv "$HOME/.dotfiles.zsh.tmp" "$HOME/.dotfiles.zsh"
 
 	if [ "$(uname -s)" = "Linux" ]; then
 		cat <<- HERE

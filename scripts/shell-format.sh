@@ -116,20 +116,20 @@ if [ ! -z $DOCKER_IMAGE_NAME ]; then
 	local_ps1_prefix="$(_fmt $DF_FMT_BOLD $DF_FG_YELLOW)["$'\xf0\x9f\x90\xb3'" ${DOCKER_IMAGE_NAME}]$(_fmt $DF_ATTR_RESET_ALL) "
 fi
 
-if [ -n "$ZSH_VERSION" ]; then
+if [ -n "$ZSH_VERSION" ] && [ -z "$ZSH" ]; then
 	setopt PROMPT_SUBST
 fi
 
 if [ "$(id -u)" = "0" ]; then
 	if [ -n "$BASH_VERSION" ]; then
 		PS1="${local_ps1_prefix}$(_fmt $DF_FMT_BOLD $DF_FG_RED)\u $(_fmt $DF_FMT_BOLD $DF_FG_BLUE)\w$(_fmt $DF_FMT_BOLD $DF_FG_YELLOW)\$(__get_git_branch)$(_fmt $DF_ATTR_RESET_ALL)\n# "
-	elif [ -n "$ZSH_VERSION" ]; then
+	elif [ -n "$ZSH_VERSION" ] && [ -z "$ZSH" ]; then
 		PS1="${local_ps1_prefix}$(_fmt $DF_FMT_BOLD $DF_FG_RED)%n $(_fmt $DF_FMT_BOLD $DF_FG_BLUE)%~$(_fmt $DF_FMT_BOLD $DF_FG_YELLOW)\$(__get_git_branch)$(_fmt $DF_ATTR_RESET_ALL)"$'\n# '
 	fi
 else
 	if [ -n "$BASH_VERSION" ]; then
 		PS1="${local_ps1_prefix}$(_fmt $DF_FMT_BOLD $DF_FG_GREEN)\u $(_fmt $DF_FMT_BOLD $DF_FG_BLUE)\w$(_fmt $DF_FMT_BOLD $DF_FG_YELLOW)\$(__get_git_branch)$(_fmt $DF_ATTR_RESET_ALL)\n\$ "
-	elif [ -n "$ZSH_VERSION" ]; then
+	elif [ -n "$ZSH_VERSION" ] && [ -z "$ZSH" ]; then
 		PS1="${local_ps1_prefix}$(_fmt $DF_FMT_BOLD $DF_FG_GREEN)%n $(_fmt $DF_FMT_BOLD $DF_FG_BLUE)%~$(_fmt $DF_FMT_BOLD $DF_FG_YELLOW)\$(__get_git_branch)$(_fmt $DF_ATTR_RESET_ALL)"$'\n$ '
 	fi
 fi
