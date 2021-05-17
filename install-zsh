@@ -9,7 +9,7 @@ HERE
 
 dotfiles_dir="${0:a:h}"
 
-# ln -snf "$dotfiles_dir/bin" "$HOME/bin"
+ln -snf "$dotfiles_dir/.tmux.conf" "$HOME/.tmux.conf"
 
 if [ ! -z $DOCKER_IMAGE_NAME ]; then
 	ln -snf "$dotfiles_dir/init" "/etc/profile.d/init"
