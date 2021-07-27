@@ -491,6 +491,7 @@ user-install-software() (
 			*.zip )
 				mkdir -p "$DF_DOWNLOADS_HOME/tmp"
 				unzip "$soft_saved_download_location" -d "$DF_DOWNLOADS_HOME/tmp"
+				mkdir -p "$soft_home"
 				mv "$DF_DOWNLOADS_HOME/tmp/${soft_zip_prefix}"* "$soft_home"
 				rm -rf "$DF_DOWNLOADS_HOME/tmp"
 
