@@ -1,7 +1,9 @@
-#!/usr/bin/env sh
+#!/usr/bin/env zsh
 
 # allow vi editing
 # set -o vi
+
+: ${DOTFILES_DIR:="/opt/dotfiles"}
 
 ###############################################################################
 # Variables                                                                   #
@@ -77,27 +79,30 @@ fi
 
 alias la="ls -AXl --group-directories-first"
 
+. "$DOTFILES_DIR/scripts/setup-aliases-docker.sh"
+
 ###############################################################################
 # Setup/Path                                                                  #
 ###############################################################################
 if [ "$DF_OS_LINUX" = "true" ] || [ "$DF_OS_MACOS" = "true" ]; then
 	if [ "$DF_OS_LINUX" = "true" ]; then
+		local_user="$(whoami)"
 		local_can_use_sudo="false"
 		if [ "$(id -u)" != "0" ] && [ "$(which sudo &>/dev/null; printf -- "$?")" = "0" ]; then
 			local_can_use_sudo="true"
 		fi
 
-		if [ "$local_can_use_sudo" = "true" ] && [ ! -f "/etc/sudoers.d/${USER}" ]; then
+		if [ "$local_can_use_sudo" = "true" ] && [ ! -f "/etc/sudoers.d/${local_user}" ]; then
 			printf -- "Setting up passwordless sudo!\n\n"
 
-			sudo touch "/etc/sudoers.d/${USER}"
-			sudo chmod 0777 "/etc/sudoers.d/${USER}"
+			sudo touch "/etc/sudoers.d/${local_user}"
+			sudo chmod 0777 "/etc/sudoers.d/${local_user}"
 
-			cat <<- HERE > "/etc/sudoers.d/${USER}"
-			${USER} ALL=(ALL) NOPASSWD: ALL
+			cat <<- HERE > "/etc/sudoers.d/${local_user}"
+			${local_user} ALL=(ALL) NOPASSWD: ALL
 			HERE
 
-			sudo chmod 0440 "/etc/sudoers.d/${USER}"
+			sudo chmod 0440 "/etc/sudoers.d/${local_user}"
 		fi
 
 		if [ "$DF_OS_WSL" = "true" ]; then
@@ -282,25 +287,29 @@ if [ "$DF_OS_LINUX" = "true" ] || [ "$DF_OS_MACOS" = "true" ]; then
 			[ -r "/Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash" ] && . "/Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash"
 		fi
 	fi
+
+	# Add dotfiles /bin to PATH
+	export PATH="$DOTFILES_DIR/bin:$PATH"
 fi
 
 ###############################################################################
-# PS1                                                                         #
+# Formatting                                                                  #
 ###############################################################################
-. "$DOTFILES_DIR/scripts/shell-format.sh"
+. "$DOTFILES_DIR/scripts/setup-format-functions.sh"
+. "$DOTFILES_DIR/scripts/setup-format-ps1.sh"
 
 ###############################################################################
 # Functions                                                                   #
 ###############################################################################
-. "$DOTFILES_DIR/scripts/helper-functions.sh"
+. "$DOTFILES_DIR/scripts/setup-functions.sh"
 
 ###############################################################################
-## Software                                                                   #
+# Software                                                                    #
 ###############################################################################
-. "$DOTFILES_DIR/scripts/setup-sdkman.sh"
-. "$DOTFILES_DIR/scripts/setup-java.sh"
-. "$DOTFILES_DIR/scripts/setup-nodejs.sh"
-. "$DOTFILES_DIR/scripts/setup-golang.sh"
-. "$DOTFILES_DIR/scripts/setup-jb-toolbox.sh"
-. "$DOTFILES_DIR/scripts/setup-vscode.sh"
-. "$DOTFILES_DIR/scripts/setup-sublime.sh"
+. "$DOTFILES_DIR/scripts/setup-software-sdkman.sh"
+. "$DOTFILES_DIR/scripts/setup-software-java.sh"
+. "$DOTFILES_DIR/scripts/setup-software-nodejs.sh"
+. "$DOTFILES_DIR/scripts/setup-software-golang.sh"
+. "$DOTFILES_DIR/scripts/setup-software-jb-toolbox.sh"
+. "$DOTFILES_DIR/scripts/setup-software-vscode.sh"
+. "$DOTFILES_DIR/scripts/setup-software-sublime.sh"

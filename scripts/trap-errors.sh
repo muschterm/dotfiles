@@ -1,5 +1,12 @@
 #!/usr/bin/env sh
 
+##################################################
+#
+# This is useful for handling step by step scripts that should
+# fail completely if a single step fails.
+#
+##################################################
+
 handle_error() {
 	printf -- "\033[0m"
 	fail "unsuccessful"

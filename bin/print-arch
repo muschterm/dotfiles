@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+
+system="$(uname -s)"
+if [ "$system" = "Linux" ]; then
+	distro="$(print-distro)"
+	if [ "$distro" = "debian" ] || [ "$distro" = "ubuntu" ] || [ "$distro" = "pop" ]; then
+		dpkg --print-architecture
+	elif [ "$distro" = "alpine" ]; then
+		apk --print-arch
+	else
+		exit 1
+	fi
+elif [ "$system" = "Darwin" ]; then
+	uname -m
+else
+	exit 1
+fi

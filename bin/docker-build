@@ -1,0 +1,222 @@
+#!/usr/bin/env zsh
+
+: ${DOTFILES_DIR:="/opt/dotfiles"}
+
+. ${DOTFILES_DIR}/scripts/setup-format-functions.sh
+. ${DOTFILES_DIR}/scripts/trap-errors.sh
+
+: ${DOCKER_REGISTRY_URL:=""}
+
+local file_name="$(basename ${0})"
+
+__print_usage() {
+text -m <<- HERE
+Script to build and push docker images into the specified docker registry.
+  Usage:
+    $file_name [OPTIONS] [NAMESPACE/]REPOSITORY[:TAG] [CONTEXT]
+
+  Options:
+    --tag-latest      Sets the the given tag will be tagged latest.
+
+    -f                Default 'Dockerfile'. Determines the location fo the dockerfile to build.
+
+    -u, --username    Optional. Username for the logging into **hub.docker.com** for Docker.
+                        Default is \$DOCKER_CREDENTIALS_USR for CI environments.
+
+    -p, --password    Optional. Password associated to username.
+                        Default is \$DOCKER_CREDENTIALS_PSW for CI environments.
+
+    -h, --help
+
+  Examples:
+    $file_name --tag-latest muschterm/alpine:3.8
+
+    $file_name muschterm/alpine:3.7
+
+    $file_name -f Dockerfile.other muschterm/alpine:3.8-glibc
+HERE
+}
+
+tag_latest=
+dockerfile=Dockerfile
+username=$DOCKER_CREDENTIALS_USR
+password=$DOCKER_CREDENTIALS_PSW
+
+while [ -z "${1%%-*}" ]
+# while [ "${1:0:1}" = "-" ] || [ "${1:0:2}" = "--" ]
+do
+	case $1 in
+		"--tag-latest" )
+			shift
+			tag_latest=true
+			;;
+		"-f" )
+			shift
+			dockerfile=$1
+			shift
+			;;
+		"-p" | "--password" )
+			shift
+			password=$1
+			shift
+			;;
+		"-h" | "--help" )
+			__print_usage
+			exit 0
+			;;
+		"--" )
+			shift
+			break
+			;;
+		*)
+			break
+			;;
+	esac
+done
+
+# should only be max 2 arguments
+if [ $# = 0 ] || [ $# -gt 2 ]; then
+	__print_usage
+
+	exit 1
+fi
+
+dockercontext=$2
+if [ -z $dockercontext ]; then
+	dockercontext=.
+else
+	dockercontext=$(echo $dockercontext | sed 's/\/$//')
+fi
+
+if [ ! -f "$dockercontext/$dockerfile" ]; then
+	fail "$dockercontext/$dockerfile not found!"
+	__print_usage
+
+	exit 1
+fi
+
+namespace=
+repository=$1
+tag=
+
+justrepository=$(echo $repository | cut -d '/' -f2 -s)
+if [ ! -z "$justrepository" ]; then
+	namespace=$(echo $repository | cut -d '/' -f1 -s)
+	repository=$justrepository
+fi
+
+if [ ! -z "$namespace" ]; then
+	namespace="$namespace/"
+fi
+
+justtag=$(echo $repository | cut -d ':' -f2 -s)
+if [ ! -z "$justtag" ]; then
+	repository=$(echo $repository | cut -d ':' -f1 -s)
+	tag=$justtag
+fi
+
+# tag docker image based on git branch and/or tag
+if [ -z $tag ]; then
+	tag_latest=false
+	gitbranch=$(git branch | grep \* | cut -d ' ' -f2)
+	if [ "$gitbranch" = "dev" ] || [ "gitbranch" = "develop" ]; then
+		tag=edge
+	elif [ "$gitbranch" = "main" ] || [ "$gitbranch" = "master" ]; then
+		currenttag=$(git describe 2>/dev/null | cut -d '-' -f1 2>/dev/null)
+		if [ "$currenttag" != "" ]; then
+			tag="$currenttag"
+			latesttag=$(git describe --tags $(git rev-list --tags --max-count=1))
+			if [ "$latesttag" = "$currenttag" ]; then
+				tag_latest=true
+			fi
+		else
+			numdev=$(git show-ref refs/remotes/origin/dev refs/remotes/origin/develop | wc -l)
+			if [ $numdev = 0 ]; then
+				# if there is no dev or develop branch, assuming master without a tag can be latest
+				tag=edge
+			fi
+		fi
+	fi
+fi
+
+if [ ! -z $tag ]; then
+	# get version and suffix
+	version=
+	suffix=
+	justsuffix=$(echo $tag | cut -d '-' -f2 -s)
+	if [ ! -z "$justsuffix" ]; then
+		version=$(echo $tag | cut -d '-' -f1 -s)
+		suffix=$justsuffix
+	else
+		version=$tag
+	fi
+
+	from_found=false
+	base_image=
+	line_number=1
+	while [ "$from_found" = "false" ]
+	do
+		dockerfile_command=$(sed -n "${line_number}p" $dockercontext/$dockerfile | awk -F ' ' '{print $1}')
+		if [ "$dockerfile_command" = "FROM" ]; then
+			from_found=true
+			base_image=$(sed -n "${line_number}p" $dockercontext/$dockerfile | awk -F ' ' '{print $2}' | sed "s/\${build_tag}/${tag}/" | sed "s/\${build_version}/${version}/" | sed "s/\${build_suffix}/${suffix}/")
+		fi
+		line_number=$((line_number+1))
+	done
+
+	step=1
+	newline
+	text -m "$step) <u>Pull base Image</u>"
+	run-command docker pull ${base_image}
+	success "complete"
+	step=$((step+1))
+
+	newline
+	text -m "$step) <u>Build Image</u>"
+	run-command docker build --build-arg build_tag=${tag} --build-arg build_version=${version} --build-arg build_suffix=${suffix} -f $dockerfile --tag ${namespace}${repository}:${tag} ${dockercontext}
+	success "complete"
+	step=$((step+1))
+
+	if [ "$tag_latest" = "true" ]; then
+		text
+		text -m "$step) <u>Tag Image as **latest**</u>"
+		run-command docker tag ${namespace}${repository}:${tag} ${namespace}${repository}:latest
+		success "complete"
+		step=$((step+1))
+	fi
+
+	newline
+	text -m "$step) <u>Remove orphaned images</u>"
+	if [ ! -z "$(docker images -f 'dangling=true' -q)" ]; then
+		run-command docker rmi $(docker images -f "dangling=true" -q)
+	fi
+	success "complete"
+	step=$((step+1))
+
+	newline
+	text -m "$step) <u>Push Image to **$namespace$repository**</u>"
+
+	if [ -z $username ] || [ -z $password ]; then
+		newline
+		text -n -m "**Continue?** [Y/n] "
+		read Continue
+		case $continue in
+			"y" | "Y" | "yes" | "Yes" | "YES" )
+				break
+				;;
+			* )
+				warn "skipped"
+				exit 0;
+				;;
+		esac
+
+		run-command docker login $DOCKER_REGISTRY_URL
+	else
+		run-command docker login $DOCKER_REGISTRY_URL -u $username -p $password
+	fi
+
+	run-command docker push $namespace$repository
+	success "complete"
+else
+	warn "nothing to build"
+fi

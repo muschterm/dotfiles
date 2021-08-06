@@ -44,11 +44,3 @@ if [ "$DF_SETUP_OPENJDK" = "true" ]; then
 	[ -z "$JAVA_HOME" ] && export JAVA_HOME="$DF_SOFTWARE_HOME/jdk-${DF_OPENJDK_VERSION}"
 	export PATH="$JAVA_HOME/bin:$PATH"
 fi
-
-if [ -z "$JAVA_HOME" ]; then
-	: ${DF_SDKMAN_DIR:="$HOME/.sdkman"}
-	if [ -d "$DF_SDKMAN_DIR/candidates/java" ]; then
-		# assume SDKMAN! version
-		export JAVA_HOME="$DF_SDKMAN_DIR/candidates/java/current"
-	fi
-fi
