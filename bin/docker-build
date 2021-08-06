@@ -199,10 +199,9 @@ if [ ! -z $tag ]; then
 	if [ -z $username ] || [ -z $password ]; then
 		newline
 		text -n -m "**Continue?** [Y/n] "
-		read Continue
+		read continue
 		case $continue in
 			"y" | "Y" | "yes" | "Yes" | "YES" )
-				break
 				;;
 			* )
 				warn "skipped"
