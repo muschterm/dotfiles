@@ -178,7 +178,7 @@ if [ ! -z $tag ]; then
 	step=$((step+1))
 
 	if [ "$tag_latest" = "true" ]; then
-		text
+		newline
 		text -m "$step) <u>Tag Image as **latest**</u>"
 		run-command docker tag ${namespace}${repository}:${tag} ${namespace}${repository}:latest
 		success "complete"
