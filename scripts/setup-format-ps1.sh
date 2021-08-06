@@ -26,11 +26,7 @@ __get_git_branch() (
 					# printf -- "\u2191$git_ahead"
 				fi
 
-				if [ $git_behind -gt 0 ]; then
-					if [ $git_ahead -gt 0 ]; then
-						printf -- ", "
-					fi
-					
+				if [ $git_behind -gt 0 ]; then					
 					printf -- "\u21E3$git_behind"
 					# printf -- "\u2193$git_behind"
 					# printf -- "\U0001F813$git_behind"
