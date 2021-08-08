@@ -79,12 +79,20 @@ if [ -f "/etc/localtime" ] && [[ "$(uname -r)" != *"Microsoft" ]]; then
 	unset localtime_var
 fi
 
-# For pure Linux that has an X11 socket
-if [ "$(uname -s)" = "Linux" ] && [ -d "/tmp/.X11-unix" ]; then
+# For OS's that have an .X11 socket.
+if [ -d "/tmp/.X11-unix" ]; then
 	docker_gui_options=$(
 		cat <<- HERE
 		$docker_gui_options \
-		--mount type="bind",src="/tmp/.X11-unix",dst="/tmp/.X11-unix",readonly \
+		--mount type="bind",src="/tmp/.X11-unix",dst="/tmp/.X11-unix",readonly
+		HERE
+	)
+fi
+
+if [ "$(uname -s)" = "Linux" ]; then
+	docker_gui_options=$(
+		cat <<- HERE
+		$docker_gui_options \
 		-e="DISPLAY=unix${DISPLAY}"
 		HERE
 	)
