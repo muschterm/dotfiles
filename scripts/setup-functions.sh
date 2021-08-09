@@ -246,11 +246,6 @@ user-install-software() (
 				soft_tar_args="$1"
 				shift
 				;;
-			"--zip-prefix" )
-				shift
-				soft_zip_prefix="$1"
-				shift
-				;;
 			"--dmg-vol" )
 				shift
 				soft_dmg_vol="$1"
@@ -284,12 +279,8 @@ user-install-software() (
 	if [ -f "$soft_saved_download_location" ]; then
 		case "$soft_saved_download_location" in
 			*.zip )
-				mkdir -p "$DF_DOWNLOADS_HOME/tmp"
-				unzip "$soft_saved_download_location" -d "$DF_DOWNLOADS_HOME/tmp"
 				mkdir -p "$soft_home"
-				mv "$DF_DOWNLOADS_HOME/tmp/${soft_zip_prefix}"* "$soft_home"
-				rm -rf "$DF_DOWNLOADS_HOME/tmp"
-
+				unzip "$soft_saved_download_location" -d "$soft_home"
 				;;
 
 			*.tar.xz )
