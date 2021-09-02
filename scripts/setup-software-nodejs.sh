@@ -29,7 +29,7 @@ if [ "$DF_SETUP_NODEJS" = "true" ]; then
 				saved_download_location="$DF_DOWNLOADS_HOME/node-v${DF_NODEJS_VERSION}-darwin-x64.tar.gz"
 			fi
 
-			user-install-software --home "$NODEJS_HOME" --zip-prefix "node-" --tar-args "--strip-components=1" "$download_url" "$saved_download_location"
+			user-install-software --home "$NODEJS_HOME" --tar-args "--strip-components=1" "$download_url" "$saved_download_location"
 		fi
 	)
 fi

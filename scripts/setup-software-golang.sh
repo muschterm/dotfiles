@@ -31,7 +31,7 @@ if [ "$DF_SETUP_GOLANG" = "true" ]; then
 				saved_download_location="$DF_DOWNLOADS_HOME/go${DF_GOLANG_VERSION}.darwin-amd64.tar.gz"
 			fi
 
-			user-install-software --home "$GOROOT" --zip-prefix "go" --tar-args "--strip-components=1" "$download_url" "$saved_download_location"
+			user-install-software --home "$GOROOT" --tar-args "--strip-components=1" "$download_url" "$saved_download_location"
 		fi
 	)
 fi

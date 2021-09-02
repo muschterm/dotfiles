@@ -30,9 +30,9 @@ if [ "$DF_SETUP_OPENJDK" = "true" ]; then
 				fi
 
 				if [ "$DF_OS_MACOS" = "true" ]; then
-					user-install-software --home "$jdk_home" --zip-prefix "jdk" --tar-args "--strip-components=4 jdk-${local_openjdk_version}.jdk/Contents/Home" "$download_url" "$saved_download_location"
+					user-install-software --home "$jdk_home" --tar-args "--strip-components=4 jdk-${local_openjdk_version}.jdk/Contents/Home" "$download_url" "$saved_download_location"
 				else
-					user-install-software --home "$jdk_home" --zip-prefix "jdk" --tar-args "--strip-components=1" "$download_url" "$saved_download_location"
+					user-install-software --home "$jdk_home" --tar-args "--strip-components=1" "$download_url" "$saved_download_location"
 				fi
 			fi
 		}
