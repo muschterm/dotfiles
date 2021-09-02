@@ -283,7 +283,7 @@ user-install-software() (
 				unzip "$soft_saved_download_location" -d "$soft_home"
 				;;
 
-			*.tar.xz )
+			*.tar.xz | *.txz )
 				mkdir -p "$soft_home"
 
 				if [ "$soft_save_download_file" = "true" ]; then
@@ -294,7 +294,7 @@ user-install-software() (
 
 				;;
 
-			*.tar.gz )
+			*.tar.gz | *.tgz )
 				mkdir -p "$soft_home"
 
 				if [ "$soft_save_download_file" = "true" ]; then
