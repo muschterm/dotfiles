@@ -77,7 +77,8 @@ elif [ "$DF_OS_MACOS" = "true" ]; then
 	alias copy="pbcopy"
 fi
 
-alias la="ls -AXl --group-directories-first"
+alias ls="ls -X --group-directories-first --color"
+alias la="ls -AXl --group-directories-first --color"
 
 . "$DOTFILES_DIR/scripts/setup-aliases-docker.sh"
 
