@@ -112,9 +112,12 @@ if [ "$DF_OS_LINUX" = "true" ] || [ "$DF_OS_MACOS" = "true" ]; then
 			# most, if not all, WSL work should be done
 			cd "$HOME"
 
-			# display requires host IP address to connect to x server; this is due to WSL2
-			export DISPLAY="$(cat "/etc/resolv.conf" | grep nameserver | awk -F " " '{print $2}'):0"
-			export LIBGL_ALWAYS_INDIRECT=1
+			# only if not using Windows 11 WSLG capability
+			if [ ! -d "/mnt/wslg" ]; then
+				# display requires host IP address to connect to x server; this is due to WSL2
+				export DISPLAY="$(cat "/etc/resolv.conf" | grep nameserver | awk -F " " '{print $2}'):0"
+				export LIBGL_ALWAYS_INDIRECT=1
+			fi
 
 			if [ "$local_can_use_sudo" = "true" ]; then
 				# Mount to /<driveletter> instead of just /mnt/<driveletter> - fixes Docker mapping issues (and is better)
