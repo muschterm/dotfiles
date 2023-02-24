@@ -17,13 +17,13 @@ if [ "$DF_SETUP_NODEJS" = "true" ]; then
 			saved_download_location=
 
 			local_nodejs_download_url="https://nodejs.org/dist/v${DF_NODEJS_VERSION}"
-			if [ "$DF_OS_WINDOWS" = "true" ]; then
+			if [ "$DF_OS" = "$DF_OS_WINDOWS" ]; then
 				download_url="$local_nodejs_download_url/node-v${DF_NODEJS_VERSION}-win-x64.zip"
 				saved_download_location="$DF_DOWNLOADS_HOME/node-v${DF_NODEJS_VERSION}-win-x64.zip"
-			elif [ "$DF_OS_LINUX" = "true" ]; then
+			elif [ "$DF_OS" = "$DF_OS_LINUX" ]; then
 				download_url="$local_nodejs_download_url/node-v${DF_NODEJS_VERSION}-linux-x64.tar.gz"
 				saved_download_location="$DF_DOWNLOADS_HOME/node-v${DF_NODEJS_VERSION}-linux-x64.tar.gz"
-			elif [ "$DF_OS_MACOS" = "true" ]; then
+			elif [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 				download_url="$local_nodejs_download_url/node-v${DF_NODEJS_VERSION}-darwin-x64.tar.gz"
 				saved_download_location="$DF_DOWNLOADS_HOME/node-v${DF_NODEJS_VERSION}-darwin-x64.tar.gz"
 			fi

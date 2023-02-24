@@ -20,13 +20,13 @@ if [ "$DF_SETUP_GOLANG" = "true" ]; then
 			saved_download_location=
 
 			local_golang_download_url="https://dl.google.com/go"
-			if [ "$DF_OS_WINDOWS" = "true" ]; then
+			if [ "$DF_OS" = "$DF_OS_WINDOWS" ]; then
 				download_url="$local_golang_download_url/go${DF_GOLANG_VERSION}.windows-amd64.zip"
 				saved_download_location="$DF_DOWNLOADS_HOME/go${DF_GOLANG_VERSION}.windows-amd64.zip"
-			elif [ "$DF_OS_LINUX" = "true" ]; then
+			elif [ "$DF_OS" = "$DF_OS_LINUX" ]; then
 				download_url="$local_golang_download_url/go${DF_GOLANG_VERSION}.linux-amd64.tar.gz"
 				saved_download_location="$DF_DOWNLOADS_HOME/go${DF_GOLANG_VERSION}.linux-amd64.tar.gz"
-			elif [ "$DF_OS_MACOS" = "true" ]; then
+			elif [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 				download_url="$local_golang_download_url/go${DF_GOLANG_VERSION}.darwin-amd64.tar.gz"
 				saved_download_location="$DF_DOWNLOADS_HOME/go${DF_GOLANG_VERSION}.darwin-amd64.tar.gz"
 			fi

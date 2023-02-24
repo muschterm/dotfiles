@@ -3,10 +3,12 @@
 system="$(uname -s)"
 if [ "$system" = "Linux" ]; then
 	distro="$(print-distro)"
-	if [ "$distro" = "debian" ] || [ "$distro" = "ubuntu" ] || [ "$distro" = "pop" ]; then
+	if [ "$distro" = "debian" ] || [ "$distro" = "ubuntu" ] || [ "$distro" = "pop" ] || [ "$distro" = "raspian" ]; then
 		dpkg --print-architecture
 	elif [ "$distro" = "alpine" ]; then
 		apk --print-arch
+	elif [ "$distro" = "fedora" ] || [ "$distro" = "centos" ] || [ "$distro" = "rhel" ]; then
+		arch
 	else
 		exit 1
 	fi

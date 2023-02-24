@@ -9,32 +9,33 @@
 # Variables                                                                   #
 ###############################################################################
 local_kernal_name="$(uname -s)"
-DF_OS_LINUX="false"
-DF_OS_WSL="false"
-DF_OS_MACOS="false"
-DF_OS_WINDOWS="false"
+DF_OS=
+DF_OS_LINUX="linux"
+DF_OS_MACOS="macos"
+DF_OS_WINDOWS="windows"
+DF_WSL="false"
 case "$(uname -r)" in
 	*microsoft* )
-		DF_OS_WSL="true"
+		DF_WSL="true"
 		;;
 	* )
 		;;
 esac
 
 if [ "$local_kernal_name" = "Linux" ]; then
-	DF_OS_LINUX="true"
+	DF_OS=$DF_OS_LINUX
 
 	[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$HOME/.dotfiles.d/downloads"
 	[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="$HOME/.dotfiles.d/opt"
 	[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="$HOME/.dotfiles.d/app"
 elif [ "$local_kernal_name" = "Darwin" ]; then
-	DF_OS_MACOS="true"
+	DF_OS=$DF_OS_MACOS
 
 	[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$HOME/.dotfiles.d/downloads"
 	[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="$HOME/.dotfiles.d/opt"
 	[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="/Applications"
-elif [ "${local_kernal_name:0:5}" = "MINGW" ] || [ "${local_kernal_name:0:6}" = "CYGWIN" ]; then
-	DF_OS_WINDOWS="true"
+elif [ "${local_kernal_name:0:4}" = "MSYS" ] || [ "${local_kernal_name:0:5}" = "MINGW" ] || [ "${local_kernal_name:0:6}" = "CYGWIN" ]; then
+	DF_OS=$DF_OS_WINDOWS
 	: ${DEV_WINDOWS_DRIVELETTER:="c"}
 
 	[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$USERPROFILE/Downloads"
@@ -44,23 +45,24 @@ fi
 
 unset local_kernal_name
 
-DF_ARCH_ARM_64="false"
-DF_ARCH_ARM_32="false"
-DF_ARCH_X86_64="false"
-DF_ARCH_X86_32="false"
+DF_ARCH=
+DF_ARCH_ARM_64="arm_64"
+DF_ARCH_ARM_32="arm_32"
+DF_ARCH_X86_64="x86_64"
+DF_ARCH_X86_32="x86_32"
 
 case "$(uname -m)" in
 	arm64 | aarch64 | armv8* )
-		DF_ARCH_ARM_64="true"
+		DF_ARCH="$DF_ARCH_ARM_64"
 		;;
 	armv7* | armv6* )
-		DF_ARCH_ARM_32="true"
+		DF_ARCH="$DF_ARCH_ARM_32"
 		;;
-	x86_64 )
-		DF_ARCH_X86_64="true"
+	x86_64 | amd64 )
+		DF_ARCH="$DF_ARCH_X86_64"
 		;;
 	i*86 )
-		DF_ARCH_X86_32="true"
+		DF_ARCH="$DF_ARCH_X86_32"
 		;;
 esac
 
@@ -70,10 +72,10 @@ esac
 ###############################################################################
 # Aliases                                                                     #
 ###############################################################################
-if [ "$DF_OS_LINUX" = "true" ]; then
+if [ "$DF_OS" = "$DF_OS_LINUX" ]; then
 	alias open="xdg-open &>/dev/null"
 	alias copy="xclip -selection clipboard"
-elif [ "$DF_OS_MACOS" = "true" ]; then
+elif [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 	alias copy="pbcopy"
 fi
 
@@ -85,8 +87,8 @@ alias la="ls -AXl --group-directories-first --color"
 ###############################################################################
 # Setup/Path                                                                  #
 ###############################################################################
-if [ "$DF_OS_LINUX" = "true" ] || [ "$DF_OS_MACOS" = "true" ]; then
-	if [ "$DF_OS_LINUX" = "true" ]; then
+if [ "$DF_OS" = "$DF_OS_LINUX" ] || [ "$DF_OS" = "$DF_OS_MACOS" ]; then
+	if [ "$DF_OS" = "$DF_OS_LINUX" ]; then
 		local_user="$(whoami)"
 		local_can_use_sudo="false"
 		if [ "$(id -u)" != "0" ] && [ "$(which sudo &>/dev/null; printf -- "$?")" = "0" ]; then
@@ -106,7 +108,7 @@ if [ "$DF_OS_LINUX" = "true" ] || [ "$DF_OS_MACOS" = "true" ]; then
 			sudo chmod 0440 "/etc/sudoers.d/${local_user}"
 		fi
 
-		if [ "$DF_OS_WSL" = "true" ]; then
+		if [ "$DF_WSL" = "true" ]; then
 			# always start in linux home directory
 			# the linux file system is better performing and where
 			# most, if not all, WSL work should be done
@@ -146,7 +148,7 @@ if [ "$DF_OS_LINUX" = "true" ] || [ "$DF_OS_MACOS" = "true" ]; then
 		unset local_can_use_sudo
 	fi
 
-	if [ "$DF_OS_MACOS" = "true" ]; then
+	if [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 		: ${DF_DOCKER_APP_HOME:="/Applications/Docker.app"}
 		if [ "$(which brew &>/dev/null; printf -- "$?")" = "0" ]; then
 			local_brew_prefix="$(brew --prefix)"
@@ -310,8 +312,8 @@ fi
 ###############################################################################
 # Formatting                                                                  #
 ###############################################################################
-. "$DOTFILES_DIR/scripts/setup-format-functions.sh"
 . "$DOTFILES_DIR/scripts/setup-format-ps1.sh"
+. "$DOTFILES_DIR/scripts/setup-format-functions.sh"
 
 ###############################################################################
 # Functions                                                                   #

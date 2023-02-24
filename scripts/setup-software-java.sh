@@ -18,18 +18,18 @@ if [ "$DF_SETUP_OPENJDK" = "true" ]; then
 				download_url=
 				saved_download_location=
 
-				if [ "$DF_OS_LINUX" = "true" ]; then
+				if [ "$DF_OS" = "$DF_OS_LINUX" ]; then
 					download_url="$openjdk_download_url/openjdk-${local_openjdk_version}_linux-x64_bin.tar.gz"
 					saved_download_location="$DF_DOWNLOADS_HOME/openjdk-${local_openjdk_version}_linux-x64_bin.tar.gz"
-				elif [ "$DF_OS_MACOS" = "true" ]; then
+				elif [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 					download_url="$openjdk_download_url/openjdk-${local_openjdk_version}_osx-x64_bin.tar.gz"
 					saved_download_location="$DF_DOWNLOADS_HOME/openjdk-${local_openjdk_version}_osx-x64_bin.tar.gz"
-				elif [ "$DF_OS_WINDOWS" = "true" ]; then
+				elif [ "$DF_OS" = "$DF_OS_WINDOWS" ]; then
 					download_url="$openjdk_download_url/openjdk-${local_openjdk_version}_windows-x64_bin.zip"
 					saved_download_location="$DF_DOWNLOADS_HOME/openjdk-${local_openjdk_version}_windows-x64_bin.zip"
 				fi
 
-				if [ "$DF_OS_MACOS" = "true" ]; then
+				if [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 					user-install-software --home "$jdk_home" --tar-args "--strip-components=4 jdk-${local_openjdk_version}.jdk/Contents/Home" "$download_url" "$saved_download_location"
 				else
 					user-install-software --home "$jdk_home" --tar-args "--strip-components=1" "$download_url" "$saved_download_location"

@@ -30,8 +30,6 @@ local docker_user_options=$(
 	-e=HOST_GID=$host_gid
 	HERE
 )
-unset host_uid
-unset host_gid
 
 if [ "$(uname -s)" = "Linux" ]; then
 	local host_docker_gid="$(getent group | grep "^docker" | awk -F ":" '{ print $3 }')"
@@ -46,6 +44,31 @@ fi
 
 alias -g docker.user="$docker_user_options"
 unset docker_user_options
+
+local docker_build_user_options=$(
+	cat <<- HERE
+	--build-arg DOCKER_USER=$docker_user \
+	--build-arg HOST_UID=$host_uid \
+	--build-arg HOST_GID=$host_gid
+	HERE
+)
+
+alias -g docker.build.user="$docker_build_user_options"
+unset docker_build_user_options
+
+unset host_uid
+unset host_gid
+
+local docker_build_proxy_options=$(
+	cat <<- HERE
+	--build-arg http_proxy \
+	--build-arg https_proxy \
+	--build-arg no_proxy
+	HERE
+)
+
+alias -g docker.build.proxy="$docker_build_proxy_options"
+unset docker_build_proxy_options
 
 ###############################################
 #
@@ -170,12 +193,47 @@ unset docker_aws_options
 
 ###############################################
 #
-# 'docker run' alias to run with user and graphics support.
+# 'docker' function overrides default docker command
+# to run with user and force amd64 for Mac Silicon.
+#
+###############################################
+
+DF_DOCKER_LOCATION=$(which docker)
+
+docker() {
+	local command="$DF_DOCKER_LOCATION $1"
+
+	if [ "$DF_OS" = "$DF_OS_MACOS" ] && [ "$DF_ARCH" = "$DF_ARCH_ARM64" ]; then
+		case "$1" in
+			"build" | "create" | "run" )
+				command="$command --platform linux/amd64"
+				;;
+		esac
+	fi
+
+	case "$1" in
+		"build" )
+			command="$command docker.build.user docker.build.proxy"
+			;;
+	esac
+
+	case "$1" in
+		"create" | "run" )
+			command="$command docker.user"
+			;;
+	esac
+
+	eval "$command" "${@:2}"
+}
+
+###############################################
+#
+# 'docker run' alias to run with graphics support.
 #   - Also ensures MacOS updates xhost.
 #
 ###############################################
 
-alias docker.run="if [ "$(uname -s)" = "Darwin" ]; then xhost + 127.0.0.1; fi; docker run docker.user docker.gui"
+alias docker.run.gui="if [ "$(uname -s)" = "Darwin" ] && [ "$(which xhost &>/dev/null; printf -- "$?")" = "0" ]; then xhost + 127.0.0.1; fi; docker run docker.gui"
 
 unset docker_user
 unset docker_user_home

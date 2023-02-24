@@ -25,6 +25,7 @@ if [ "$distro" = "alpine" ]; then
 		addgroup $DOCKER_USER docker
 	fi
 else
+	# all other distros - debian, fedora, centos, redhat, etc.
 	groupadd -r -g $HOST_GID $DOCKER_USER
 	useradd -r -u $HOST_UID -s /bin/sh -g $DOCKER_USER $DOCKER_USER
 

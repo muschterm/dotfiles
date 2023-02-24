@@ -9,7 +9,7 @@ fi
 
 arch="$(print-arch)"; \
 case "$arch" in
-	'x86_64')
+	'x86_64' | 'amd64')
 		url="https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz"
 		;;
 	'armhf')
@@ -29,7 +29,7 @@ esac
 
 if [ "$(which curl &>/dev/null; printf -- "$?")" = "0" ]; then
 	curl -fsSL -o "$HOME/docker.tgz" "$url"
-elif [ "$(which curl &>/dev/null; printf -- "$?")" = "0" ]; then
+elif [ "$(which wget &>/dev/null; printf -- "$?")" = "0" ]; then
 	wget -O "$HOME/docker.tgz" "$url"
 else
 	printf -- "Cannot install Docker CLI - missing curl or wget.\n"

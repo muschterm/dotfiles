@@ -11,15 +11,15 @@ if [ "$DF_SETUP_JB_TOOLBOX" = "true" ]; then
 			HERE
 
 			suffix=
-			if [ "$DF_OS_WINDOWS" = "true" ]; then
+			if [ "$DF_OS" = "$DF_OS_WINDOWS" ]; then
 				suffix=".win.zip"
-			elif [ "$DF_OS_LINUX" = "true" ]; then
+			elif [ "$DF_OS" = "$DF_OS_LINUX" ]; then
 				suffix=".tar.gz"
-			elif [ "$DF_OS_MACOS" = "true" ]; then
-				if [ "$DF_ARCH_ARM_64" = "true" ]; then
+			elif [ "$DF_OS" = "$DF_OS_MACOS" ]; then
+				if [ "$DF_ARCH" = "$DF_ARCH_ARM64" ]; then
 					suffix="-arm64.dmg"
 				else
-					suffix=".dmg"	
+					suffix=".dmg"
 				fi
 			fi
 
