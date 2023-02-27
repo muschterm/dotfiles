@@ -7,6 +7,13 @@
 #
 ###############################################
 
+is_docker_desktop=0
+is_docker_engine=1
+if [ $(docker version --format='{{.Server.Platform.Name}}' | grep "Desktop" | wc -l) = "1" ]; then
+	is_docker_desktop=1
+	is_docker_engine=0
+fi
+
 local docker_user="$(whoami)"
 local docker_user_home="/home/$docker_user"
 local host_uid="$(id -u $docker_user)"
@@ -113,12 +120,14 @@ if [ -d "/tmp/.X11-unix" ]; then
 fi
 
 if [ "$(uname -s)" = "Linux" ]; then
-	docker_gui_options=$(
-		cat <<- HERE
-		$docker_gui_options \
-		-e="DISPLAY=unix${DISPLAY}"
-		HERE
-	)
+	if ((is_docker_engine)); then
+		docker_gui_options=$(
+			cat <<- HERE
+			$docker_gui_options \
+			-e="DISPLAY=unix${DISPLAY}"
+			HERE
+		)
+	fi
 
 	# Map the machine-id; this is necessary sometimes depending on some graphics
 	if [ -f "/etc/machine-id" ]; then
@@ -131,7 +140,7 @@ if [ "$(uname -s)" = "Linux" ]; then
 	fi
 fi
 
-if [ "$(uname -s)" = "Darwin" ] || [[ "$(uname -r)" = *"Microsoft" ]]; then
+if ((is_docker_desktop)) || [ "$(uname -s)" = "Darwin" ] || [[ "$(uname -r)" = *"Microsoft" ]]; then
 	docker_gui_options=$(
 		cat <<- HERE
 		$docker_gui_options \
@@ -201,29 +210,31 @@ unset docker_aws_options
 DF_DOCKER_LOCATION=$(which docker)
 
 docker() {
-	local command="$DF_DOCKER_LOCATION $1"
+	local command=("$DF_DOCKER_LOCATION" "$1")
 
 	if [ "$DF_OS" = "$DF_OS_MACOS" ] && [ "$DF_ARCH" = "$DF_ARCH_ARM64" ]; then
 		case "$1" in
 			"build" | "create" | "run" )
-				command="$command --platform linux/amd64"
+				command+=("--platform" "linux/amd64")
 				;;
 		esac
 	fi
 
 	case "$1" in
 		"build" )
-			command="$command docker.build.user docker.build.proxy"
+			command+=(docker.build.user docker.build.proxy)
 			;;
 	esac
 
 	case "$1" in
 		"create" | "run" )
-			command="$command docker.user"
+			command+=(docker.user)
 			;;
 	esac
 
-	eval "$command" "${@:2}"
+	command+=("${@:2}")
+
+	"${command[@]}"
 }
 
 ###############################################

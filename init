@@ -312,6 +312,7 @@ fi
 ###############################################################################
 # Formatting                                                                  #
 ###############################################################################
+. "$DOTFILES_DIR/scripts/setup-format.sh"
 . "$DOTFILES_DIR/scripts/setup-format-ps1.sh"
 . "$DOTFILES_DIR/scripts/setup-format-functions.sh"
 
