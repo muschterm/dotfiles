@@ -7,11 +7,13 @@
 #
 ###############################################
 
+if ! command -v docker > /dev/null; then
+	return 0;
+fi
+
 is_docker_desktop=0
-is_docker_engine=1
-if [ $(docker version --format='{{.Server.Platform.Name}}' | grep "Desktop" | wc -l) = "1" ]; then
+if [ "$(docker version --format='{{.Server.Platform.Name}}' 2>/dev/null | grep "Desktop" | wc -l)" = "1" ]; then
 	is_docker_desktop=1
-	is_docker_engine=0
 fi
 
 local docker_user="$(whoami)"
@@ -93,7 +95,7 @@ local docker_gui_options=$(
 
 # Map the localtime; this ensure accurate time in the container when running
 # images such as firefox.
-if [ -f "/etc/localtime" ] && [[ "$(uname -r)" != *"Microsoft" ]]; then 
+if [ -f "/etc/localtime" ]; then 
 	local localtime_var="/etc/localtime"
 	if [ "$(uname -s)" = "Darwin" ]; then
 		# MacOS /etc/localtime is a symlink
@@ -119,32 +121,28 @@ if [ -d "/tmp/.X11-unix" ]; then
 	)
 fi
 
-if [ "$(uname -s)" = "Linux" ]; then
-	if ((is_docker_engine)); then
-		docker_gui_options=$(
-			cat <<- HERE
-			$docker_gui_options \
-			-e="DISPLAY=unix${DISPLAY}"
-			HERE
-		)
-	fi
-
-	# Map the machine-id; this is necessary sometimes depending on some graphics
-	if [ -f "/etc/machine-id" ]; then
-		docker_gui_options=$(
-			cat <<- HERE
-			$docker_gui_options \
-			--mount type="bind",src="/etc/machine-id",dst="/etc/machine-id",readonly
-			HERE
-		)
-	fi
+# Map the machine-id; this is necessary sometimes depending on some graphics
+if [ -f "/etc/machine-id" ]; then
+	docker_gui_options=$(
+		cat <<- HERE
+		$docker_gui_options \
+		--mount type="bind",src="/etc/machine-id",dst="/etc/machine-id",readonly
+		HERE
+	)
 fi
 
-if ((is_docker_desktop)) || [ "$(uname -s)" = "Darwin" ] || [[ "$(uname -r)" = *"Microsoft" ]]; then
+if ((is_docker_desktop)); then
 	docker_gui_options=$(
 		cat <<- HERE
 		$docker_gui_options \
 		-e "DISPLAY=host.docker.internal:0"
+		HERE
+	)
+elif [ "$(uname -s)" = "Linux" ]; then
+	docker_gui_options=$(
+		cat <<- HERE
+		$docker_gui_options \
+		-e="DISPLAY=unix${DISPLAY}"
 		HERE
 	)
 fi
@@ -158,7 +156,19 @@ unset docker_gui_options
 #
 ###############################################
 
-alias -g docker.sock="-v /var/run/docker.sock:/var/run/docker.sock"
+if ((is_docker_desktop)); then
+	if [ "$(uname -s)" = "Linux" ]; then
+		if [ "$DF_WSL" = "true" ]; then
+			alias -g docker.sock="-v $HOME/.docker/run/docker-cli-api.sock:/var/run/docker.sock"
+		else
+			alias -g docker.sock="-v $HOME/.docker/desktop/docker.sock:/var/run/docker.sock"
+		fi
+	elif [ "$(uname -s)" = "Darwin" ]; then
+		alias -g docker.sock="-v $HOME/.docker/run/docker.sock:/var/run/docker.sock"
+	fi
+else
+	alias -g docker.sock="-v /var/run/docker.sock:/var/run/docker.sock"
+fi
 
 ###############################################
 #

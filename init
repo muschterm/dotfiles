@@ -8,7 +8,6 @@
 ###############################################################################
 # Variables                                                                   #
 ###############################################################################
-local_kernal_name="$(uname -s)"
 DF_OS=
 DF_OS_LINUX="linux"
 DF_OS_MACOS="macos"
@@ -22,28 +21,30 @@ case "$(uname -r)" in
 		;;
 esac
 
-if [ "$local_kernal_name" = "Linux" ]; then
-	DF_OS=$DF_OS_LINUX
+case "$(uname -s)" in
+	"Linux" )
+		DF_OS=$DF_OS_LINUX
 
-	[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$HOME/.dotfiles.d/downloads"
-	[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="$HOME/.dotfiles.d/opt"
-	[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="$HOME/.dotfiles.d/app"
-elif [ "$local_kernal_name" = "Darwin" ]; then
-	DF_OS=$DF_OS_MACOS
+		[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$HOME/.dotfiles.d/downloads"
+		[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="$HOME/.dotfiles.d/opt"
+		[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="$HOME/.dotfiles.d/app"
+		;;
+	"Darwin" )
+		DF_OS=$DF_OS_MACOS
 
-	[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$HOME/.dotfiles.d/downloads"
-	[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="$HOME/.dotfiles.d/opt"
-	[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="/Applications"
-elif [ "${local_kernal_name:0:4}" = "MSYS" ] || [ "${local_kernal_name:0:5}" = "MINGW" ] || [ "${local_kernal_name:0:6}" = "CYGWIN" ]; then
-	DF_OS=$DF_OS_WINDOWS
-	: ${DEV_WINDOWS_DRIVELETTER:="c"}
+		[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$HOME/.dotfiles.d/downloads"
+		[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="$HOME/.dotfiles.d/opt"
+		[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="/Applications"
+		;;
+	"MSYS"* | "MINGW"* | "CYGWIN"* )
+		DF_OS=$DF_OS_WINDOWS
+		: ${DEV_WINDOWS_DRIVELETTER:="c"}
 
-	[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$USERPROFILE/Downloads"
-	[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="/$DEV_WINDOWS_DRIVELETTER/dotfiles/opt"
-	[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="/$DEV_WINDOWS_DRIVELETTER/dotfiles/app"
-fi
-
-unset local_kernal_name
+		[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$USERPROFILE/Downloads"
+		[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="/$DEV_WINDOWS_DRIVELETTER/dotfiles/opt"
+		[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="/$DEV_WINDOWS_DRIVELETTER/dotfiles/app"
+		;;
+esac
 
 DF_ARCH=
 DF_ARCH_ARM_64="arm_64"
