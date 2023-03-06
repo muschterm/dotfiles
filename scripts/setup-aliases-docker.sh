@@ -12,7 +12,7 @@ if ! command -v docker > /dev/null; then
 fi
 
 is_docker_desktop=0
-if [ "$(docker version --format='{{.Server.Platform.Name}}' 2>/dev/null | grep "Desktop" | wc -l)" = "1" ]; then
+if [ "$(docker version --format='{{.Server.Platform.Name}}' 2>/dev/null | grep "Desktop" | wc -l | tr -d "[:space:]")" = "1" ]; then
 	is_docker_desktop=1
 fi
 
@@ -254,7 +254,7 @@ docker() {
 #
 ###############################################
 
-alias docker.run.gui="if [ "$(uname -s)" = "Darwin" ] && [ "$(which xhost &>/dev/null; printf -- "$?")" = "0" ]; then xhost + 127.0.0.1; fi; docker run docker.gui"
+alias docker.run.gui="if [ "$(uname -s)" = "Darwin" ] && command -v xhost > /dev/null; then xhost + 127.0.0.1; fi; docker run docker.gui"
 
 unset docker_user
 unset docker_user_home

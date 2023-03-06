@@ -49,17 +49,5 @@ chmod 0440 "/etc/sudoers.d/$DOCKER_USER"
 if [ "$distro" = "alpine" ]; then
 	exec su-exec $DOCKER_USER "$@"
 else
-	# Install gosu if not already part of the image. This is something
-	# that should not be done and should be part of the image, but also
-	# can be helpful during development.
-	if [ "$(which gosu &>/dev/null; printf -- "$?")" = "0" ]; then
-		apt-get update
-		apt-get install -y gosu
-		rm -rf /var/lib/apt/lists/*
-
-		# Test that gosu installed properly.
-		gosu nobody true
-	fi
-
 	exec gosu $DOCKER_USER "$@"
 fi

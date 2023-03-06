@@ -17,7 +17,7 @@ fi
 
 # if MacOS, Homebrew is required for this script to work 100%
 if [ "$(uname -s)" = "Darwin" ]; then
-	if [ "$(which brew &>/dev/null; printf -- "$?")" = "0" ]; then
+	if command -v brew > /dev/null; then
 
 		# GNU coreutils
 		PATH="$(brew --prefix)/opt/coreutils/libexec/gnubin:$PATH"

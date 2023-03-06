@@ -27,9 +27,9 @@ case "$arch" in
 		;;
 esac
 
-if [ "$(which curl &>/dev/null; printf -- "$?")" = "0" ]; then
+if command -v curl > /dev/null; then
 	curl -fsSL -o "$HOME/docker.tgz" "$url"
-elif [ "$(which wget &>/dev/null; printf -- "$?")" = "0" ]; then
+elif command -v wget > /dev/null; then
 	wget -O "$HOME/docker.tgz" "$url"
 else
 	printf -- "Cannot install Docker CLI - missing curl or wget.\n"

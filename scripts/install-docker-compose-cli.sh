@@ -14,9 +14,8 @@ if [ "$(print-distro)" = "alpine" ]; then
 	HERE
 fi
 
-if [ "$(which curl &>/dev/null; printf -- "$?")" = "0" ]; then
+if command -v curl > /dev/null; then
 	curl -L "https://github.com/docker/compose/releases/download/${VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-
 else
 	printf -- "Cannot install docker-compose - missing curl.\n"
 fi

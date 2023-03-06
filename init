@@ -92,7 +92,7 @@ if [ "$DF_OS" = "$DF_OS_LINUX" ] || [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 	if [ "$DF_OS" = "$DF_OS_LINUX" ]; then
 		local_user="$(whoami)"
 		local_can_use_sudo="false"
-		if [ "$(id -u)" != "0" ] && [ "$(which sudo &>/dev/null; printf -- "$?")" = "0" ]; then
+		if [ "$(id -u)" != "0" ] && command -v sudo > /dev/null; then
 			local_can_use_sudo="true"
 		fi
 
@@ -151,7 +151,7 @@ if [ "$DF_OS" = "$DF_OS_LINUX" ] || [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 
 	if [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 		: ${DF_DOCKER_APP_HOME:="/Applications/Docker.app"}
-		if [ "$(which brew &>/dev/null; printf -- "$?")" = "0" ]; then
+		if command -v brew > /dev/null; then
 			local_brew_prefix="$(brew --prefix)"
 
 			if [ -n "$BASH_VERSION" ]; then

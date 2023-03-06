@@ -79,7 +79,7 @@ __get_distro() (
 		local_ps1_prefix="\uF17A"
 	fi
 
-	if [ "$(cat /proc/1/cgroup 2>/dev/null | grep "/docker/" | wc -l)" != "0" ] || [ -f "/.dockerenv" ]; then
+	if [ "$(cat /proc/1/cgroup 2>/dev/null | grep "/docker/" | wc -l | tr -d "[:space:]")" != "0" ] || [ -f "/.dockerenv" ]; then
 		# [distro] -> [docker logo]
 		local_ps1_prefix="$local_ps1_prefix\uF45C\uF308"
 	fi
