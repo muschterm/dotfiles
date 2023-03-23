@@ -25,7 +25,7 @@ if [ "$DF_SETUP_NODEJS" = "true" ]; then
 				saved_download_location="$DF_DOWNLOADS_HOME/node-v${DF_NODEJS_VERSION}-linux-x64.tar.gz"
 			elif [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 				suffix=
-				if [ "$DF_ARCH" = "$DF_ARCH_ARM64" ]; then
+				if [ "$DF_ARCH" = "$DF_ARCH_ARM_64" ]; then
 					suffix="-arm64.tar.gz"
 				else
 					suffix="-x64.tar.gz"
