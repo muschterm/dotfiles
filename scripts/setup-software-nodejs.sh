@@ -24,8 +24,15 @@ if [ "$DF_SETUP_NODEJS" = "true" ]; then
 				download_url="$local_nodejs_download_url/node-v${DF_NODEJS_VERSION}-linux-x64.tar.gz"
 				saved_download_location="$DF_DOWNLOADS_HOME/node-v${DF_NODEJS_VERSION}-linux-x64.tar.gz"
 			elif [ "$DF_OS" = "$DF_OS_MACOS" ]; then
-				download_url="$local_nodejs_download_url/node-v${DF_NODEJS_VERSION}-darwin-x64.tar.gz"
-				saved_download_location="$DF_DOWNLOADS_HOME/node-v${DF_NODEJS_VERSION}-darwin-x64.tar.gz"
+				suffix=
+				if [ "$DF_ARCH" = "$DF_ARCH_ARM64" ]; then
+					suffix="-arm64.tar.gz"
+				else
+					suffix="-x64.tar.gz"
+				fi
+
+				download_url="$local_nodejs_download_url/node-v${DF_NODEJS_VERSION}-darwin${suffix}"
+				saved_download_location="$DF_DOWNLOADS_HOME/node-v${DF_NODEJS_VERSION}-darwin${suffix}"
 			fi
 
 			user-install-software --home "$NODEJS_HOME" --tar-args "--strip-components=1" "$download_url" "$saved_download_location"
