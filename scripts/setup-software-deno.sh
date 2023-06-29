@@ -15,4 +15,10 @@ if [ "${DF_SETUP_DENO}" = "true" ]; then
 			curl -fsSL "https://deno.land/x/install/install.sh" | sh
 		)
 	fi
+
+	if [ ! -f "$HOME/.zsh/_deno" ]; then
+		mkdir -p "$HOME/.zsh"
+		deno completions zsh > "$HOME/.zsh/_deno"
+	fi
+
 fi
