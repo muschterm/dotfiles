@@ -327,6 +327,7 @@ fi
 ###############################################################################
 . "$DOTFILES_DIR/scripts/setup-software-sdkman.sh"
 . "$DOTFILES_DIR/scripts/setup-software-java.sh"
+. "$DOTFILES_DIR/scripts/setup-software-deno.sh"
 . "$DOTFILES_DIR/scripts/setup-software-nodejs.sh"
 . "$DOTFILES_DIR/scripts/setup-software-golang.sh"
 . "$DOTFILES_DIR/scripts/setup-software-jb-toolbox.sh"
