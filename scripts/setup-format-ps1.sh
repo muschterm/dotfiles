@@ -21,14 +21,14 @@ nf_dev_git_branch=$'\xee\x9c\xa5'
 #     0000000 9cee 00a5                              
 #     0000003
 
-upwards_dashed_arrow=$'\xe1\x87\xa1'
-# ⇡ | [not nerd font - git ahead] upwards_dashed_arrow | UTF \u21e1 | \xe1\x87\xa1
+upwards_dashed_arrow=$'\xe2\x87\xa1'
+# ⇡ | [not nerd font - git ahead] upwards_dashed_arrow | UTF \u21e1 | \xe2\x87\xa1
 #   hexdump
 #     0000000 87e2 00a1
 #     0000003
 
-downwards_dashed_arrow=$'\xe1\x87\xa3'
-# ⇣ | [not nerd font - git behind] downwards_dashed_arrow | UTF \u21e3 | \xe1\x87\xa3
+downwards_dashed_arrow=$'\xe2\x87\xa3'
+# ⇣ | [not nerd font - git behind] downwards_dashed_arrow | UTF \u21e3 | \xe2\x87\xa3
 #   hexdump
 #     0000000 87e2 00a3
 #     0000003
