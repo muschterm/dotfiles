@@ -2,15 +2,15 @@
 
 : ${DF_SETUP_NODEJS:="false"}
 if [ "$DF_SETUP_NODEJS" = "true" ]; then
-	: ${DF_NODEJS_VERSION:="18.18.2"}
+	: ${DF_NODEJS_VERSION:="20.10.0"}
 	export NODEJS_HOME="$DF_SOFTWARE_HOME/node-v${DF_NODEJS_VERSION}"
-	
+
 	export PATH="$NODEJS_HOME/bin:$PATH"
 
 	(
 		if [ ! -d "$NODEJS_HOME" ]; then
-			cat <<- HERE
-			Installing Node JS (version $DF_NODEJS_VERSION)...
+			cat <<-HERE
+				Installing Node JS (version $DF_NODEJS_VERSION)...
 			HERE
 
 			download_url=

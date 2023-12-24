@@ -4,10 +4,11 @@ read_timeout() {
 	(
 		trap : USR1
 		trap 'kill "$pid" 2> /dev/null' EXIT
-		(sleep "$1" && kill -USR1 "$$") & pid=$!
+		(sleep "$1" && kill -USR1 "$$") &
+		pid=$!
 		read -r "$2"
 		ret=$?
-		kill "$pid" 2> /dev/null
+		kill "$pid" 2>/dev/null
 		trap - EXIT
 		return "$ret"
 	)
@@ -24,67 +25,65 @@ text() {
 	reset_color=false
 	use_markdown=false
 	help_only=false
-	while [ -z "${1%%-*}" ]
-	# while [ "${1:0:1}" = "-" ] || [ "${1:0:2}" = "--" ]
-	do
+	while [ -z "${1%%-*}" ]; do # while [ "${1:0:1}" = "-" ] || [ "${1:0:2}" = "--" ]
 		new_attr_var=
 		new_reset_attr_var=
 		case $1 in
-			"--red" )
-				new_attr_var="$DF_FG_RED"
-				reset_color=true
-				shift
-				;;
-			"--green" )
-				new_attr_var="$DF_FG_GREEN"
-				reset_color=true
-				shift
-				;;
-			"--yellow" )
-				new_attr_var="$DF_FG_YELLOW"
-				reset_color=true
-				shift
-				;;
-			"--blue" )
-				new_attr_var="$DF_FG_BLUE"
-				reset_color=true
-				shift
-				;;
-			"--light-gray" )
-				new_attr_var="$DF_FG_LIGHT_GRAY"
-				reset_color=true
-				shift
-				;;
-			"--dark-gray" )
-				new_attr_var="$DF_FG_DARK_GRAY"
-				reset_color=true
-				shift
-				;;
-			"-n" )
-				newline=
-				shift
-				;;
-			"-b" | "--bold" )
-				new_attr_var="$DF_FMT_BOLD"
-				new_reset_attr_var="$DF_ATTR_RESET_BOLD"
-				shift
-				;;
-			"-d" | "--dim" )
-				new_attr_var="$DF_FMT_DIM"
-				new_reset_attr_var="$DF_ATTR_RESET_DIM"
-				shift
-				;;
-			"-u" | "--underline" )
-				new_attr_var="$DF_FMT_UNDERLINE"
-				new_reset_attr_var="$DF_ATTR_RESET_UNDERLINE"
-				shift
-				;;
-			"-m" | "--markdown" )
-				shift
-				use_markdown=true
-				;;
-			"-h" | "--help" )
-				cat <<- HERE
+		"--red")
+			new_attr_var="$DF_FG_RED"
+			reset_color=true
+			shift
+			;;
+		"--green")
+			new_attr_var="$DF_FG_GREEN"
+			reset_color=true
+			shift
+			;;
+		"--yellow")
+			new_attr_var="$DF_FG_YELLOW"
+			reset_color=true
+			shift
+			;;
+		"--blue")
+			new_attr_var="$DF_FG_BLUE"
+			reset_color=true
+			shift
+			;;
+		"--light-gray")
+			new_attr_var="$DF_FG_LIGHT_GRAY"
+			reset_color=true
+			shift
+			;;
+		"--dark-gray")
+			new_attr_var="$DF_FG_DARK_GRAY"
+			reset_color=true
+			shift
+			;;
+		"-n")
+			newline=
+			shift
+			;;
+		"-b" | "--bold")
+			new_attr_var="$DF_FMT_BOLD"
+			new_reset_attr_var="$DF_ATTR_RESET_BOLD"
+			shift
+			;;
+		"-d" | "--dim")
+			new_attr_var="$DF_FMT_DIM"
+			new_reset_attr_var="$DF_ATTR_RESET_DIM"
+			shift
+			;;
+		"-u" | "--underline")
+			new_attr_var="$DF_FMT_UNDERLINE"
+			new_reset_attr_var="$DF_ATTR_RESET_UNDERLINE"
+			shift
+			;;
+		"-m" | "--markdown")
+			shift
+			use_markdown=true
+			;;
+		"-h" | "--help")
+			cat <<-HERE
 				Helper script that is to be sourced into other script files for helper functions.
 
 				  Usage:
@@ -136,16 +135,17 @@ text() {
 
 				      $ text -m "Hello, **World**! It <green>worked</green>!"
 				      Hello, $(_fmt $DF_FMT_BOLD)World$(_fmt $DF_ATTR_RESET_BOLD)! It $(_fmt $DF_FG_GREEN)worked$(_fmt $DF_FG_DEFAULT)!
-				HERE
-				help_only=true
-				break
-				;;
-			"--" )
-				shift
-				break
-				;;
-			*)
-				break
+			HERE
+			help_only=true
+			break
+			;;
+		"--")
+			shift
+			break
+			;;
+		*)
+			break
+			;;
 		esac
 
 		if [ "$new_attr_var" != "" ]; then
@@ -171,9 +171,9 @@ text() {
 		temptext=$1
 		if [ -z "$temptext" ]; then
 			# This is necessary - some POSIX shells do not support auto timing out
-			# on cat if the input just hangs. This ensures when called without data 
+			# on cat if the input just hangs. This ensures when called without data
 			# that this will never wait forever.
-			temptext="$(timeout 1 cat 2> /dev/null)"
+			temptext="$(timeout 1 cat 2>/dev/null)"
 
 			# The below only works in BASH
 			# # if [ ! -z "$(read --help 2> /dev/null | grep "\-t timeout")" ]; then
@@ -225,7 +225,7 @@ fail() {
 	text -b --red "$1"
 }
 
-run-command() {
+run_command() {
 	printf -- "$(_fmt $DF_FMT_DIM)"
 	eval $@
 	printf -- "$(_fmt $DF_ATTR_RESET_DIM)"

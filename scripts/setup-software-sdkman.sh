@@ -3,10 +3,10 @@
 : ${DF_SETUP_SDKMAN:="false"}
 if [ "${DF_SETUP_SDKMAN}" = "true" ]; then
 	: ${SDKMAN_DIR:="$HOME/.sdkman"}
-	
+
 	if [ ! -d "$SDKMAN_DIR" ]; then
-		cat <<- HERE
-		Installing SDKMAN! into "$SDKMAN_DIR"...
+		cat <<-HERE
+			Installing SDKMAN! into "$SDKMAN_DIR"...
 		HERE
 
 		(

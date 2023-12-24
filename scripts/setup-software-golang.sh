@@ -2,9 +2,9 @@
 
 : ${DF_SETUP_GOLANG:="false"}
 if [ "$DF_SETUP_GOLANG" = "true" ]; then
-	: ${DF_GOLANG_VERSION:="1.12.7"}
+	: ${DF_GOLANG_VERSION:="1.21.5"}
 	export GOROOT="$DF_SOFTWARE_HOME/go-${DF_GOLANG_VERSION}"
-	
+
 	# setup GOPATH
 	[ -z "$GOPATH" ] && export GOPATH="$HOME/go"
 
@@ -12,8 +12,8 @@ if [ "$DF_SETUP_GOLANG" = "true" ]; then
 
 	(
 		if [ ! -d "$GOROOT" ]; then
-			cat <<- HERE
-			Installing Golang (version $DF_GOLANG_VERSION)...
+			cat <<-HERE
+				Installing Golang (version $DF_GOLANG_VERSION)...
 			HERE
 
 			download_url=

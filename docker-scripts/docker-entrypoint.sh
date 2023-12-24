@@ -6,7 +6,7 @@
 #   - same user id and group id for when creating files in mounted volumes from the host
 #
 # Compatible with alpine and debian distros.
-# 
+#
 # This is less needed when using Docker for Mac or Docker for Windows as that natively
 # handles the privileges for the host user within the container.
 #
@@ -43,7 +43,7 @@ chown -R "$DOCKER_USER:$DOCKER_USER" "/run/user/$HOST_UID"
 
 # Add no password sudo.
 printf -- "$DOCKER_USER ALL=(ALL) NOPASSWD: ALL
-" >> "/etc/sudoers.d/$DOCKER_USER"
+" >>"/etc/sudoers.d/$DOCKER_USER"
 chmod 0440 "/etc/sudoers.d/$DOCKER_USER"
 
 if [ "$distro" = "alpine" ]; then

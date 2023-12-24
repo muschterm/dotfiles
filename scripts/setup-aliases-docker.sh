@@ -7,8 +7,8 @@
 #
 ###############################################
 
-if ! command -v docker > /dev/null; then
-	return 0;
+if ! command -v docker >/dev/null; then
+	return 0
 fi
 
 is_docker_desktop=0
@@ -33,19 +33,19 @@ if [ "$(uname -s)" = "Darwin" ]; then
 fi
 
 local docker_user_options=$(
-	cat <<- HERE
-	-e=DOCKER_USER=$docker_user \
-	-e=HOST_UID=$host_uid \
-	-e=HOST_GID=$host_gid
+	cat <<-HERE
+		-e=DOCKER_USER=$docker_user \
+		-e=HOST_UID=$host_uid \
+		-e=HOST_GID=$host_gid
 	HERE
 )
 
 if [ "$(uname -s)" = "Linux" ]; then
 	local host_docker_gid="$(getent group | grep "^docker" | awk -F ":" '{ print $3 }')"
 	docker_user_options=$(
-		cat <<- HERE
-		$docker_user_options \
-		-e="HOST_DOCKER_GID=$host_docker_gid"
+		cat <<-HERE
+			$docker_user_options \
+			-e="HOST_DOCKER_GID=$host_docker_gid"
 		HERE
 	)
 	unset host_docker_gid
@@ -55,10 +55,10 @@ alias -g docker.user="$docker_user_options"
 unset docker_user_options
 
 local docker_build_user_options=$(
-	cat <<- HERE
-	--build-arg DOCKER_USER=$docker_user \
-	--build-arg HOST_UID=$host_uid \
-	--build-arg HOST_GID=$host_gid
+	cat <<-HERE
+		--build-arg DOCKER_USER=$docker_user \
+		--build-arg HOST_UID=$host_uid \
+		--build-arg HOST_GID=$host_gid
 	HERE
 )
 
@@ -69,10 +69,10 @@ unset host_uid
 unset host_gid
 
 local docker_build_proxy_options=$(
-	cat <<- HERE
-	--build-arg http_proxy \
-	--build-arg https_proxy \
-	--build-arg no_proxy
+	cat <<-HERE
+		--build-arg http_proxy \
+		--build-arg https_proxy \
+		--build-arg no_proxy
 	HERE
 )
 
@@ -87,25 +87,25 @@ unset docker_build_proxy_options
 
 # Add helpful environment variables to match the host scale if using GDK apps
 local docker_gui_options=$(
-	cat <<- HERE
-	$docker_gui_options \
-	-e=GDK_SCALE -e=GDK_DPI_SCALE
+	cat <<-HERE
+		$docker_gui_options \
+		-e=GDK_SCALE -e=GDK_DPI_SCALE
 	HERE
 )
 
 # Map the localtime; this ensure accurate time in the container when running
 # images such as firefox.
-if [ -f "/etc/localtime" ]; then 
+if [ -f "/etc/localtime" ]; then
 	local localtime_var="/etc/localtime"
 	if [ "$(uname -s)" = "Darwin" ]; then
 		# MacOS /etc/localtime is a symlink
 		localtime_var="$(readlink /etc/localtime)"
 	fi
-	
+
 	docker_gui_options=$(
-		cat <<- HERE
-		$docker_gui_options \
-		--mount type="bind",src="${localtime_var}",dst="/etc/localtime",readonly
+		cat <<-HERE
+			$docker_gui_options \
+			--mount type="bind",src="${localtime_var}",dst="/etc/localtime",readonly
 		HERE
 	)
 	unset localtime_var
@@ -114,9 +114,9 @@ fi
 # For OS's that have an .X11 socket.
 if [ -d "/tmp/.X11-unix" ]; then
 	docker_gui_options=$(
-		cat <<- HERE
-		$docker_gui_options \
-		--mount type="bind",src="/tmp/.X11-unix",dst="/tmp/.X11-unix",readonly
+		cat <<-HERE
+			$docker_gui_options \
+			--mount type="bind",src="/tmp/.X11-unix",dst="/tmp/.X11-unix",readonly
 		HERE
 	)
 fi
@@ -124,25 +124,25 @@ fi
 # Map the machine-id; this is necessary sometimes depending on some graphics
 if [ -f "/etc/machine-id" ]; then
 	docker_gui_options=$(
-		cat <<- HERE
-		$docker_gui_options \
-		--mount type="bind",src="/etc/machine-id",dst="/etc/machine-id",readonly
+		cat <<-HERE
+			$docker_gui_options \
+			--mount type="bind",src="/etc/machine-id",dst="/etc/machine-id",readonly
 		HERE
 	)
 fi
 
 if ((is_docker_desktop)); then
 	docker_gui_options=$(
-		cat <<- HERE
-		$docker_gui_options \
-		-e "DISPLAY=host.docker.internal:0"
+		cat <<-HERE
+			$docker_gui_options \
+			-e "DISPLAY=host.docker.internal:0"
 		HERE
 	)
 elif [ "$(uname -s)" = "Linux" ]; then
 	docker_gui_options=$(
-		cat <<- HERE
-		$docker_gui_options \
-		-e="DISPLAY=unix${DISPLAY}"
+		cat <<-HERE
+			$docker_gui_options \
+			-e="DISPLAY=unix${DISPLAY}"
 		HERE
 	)
 fi
@@ -177,8 +177,8 @@ fi
 ###############################################
 
 local docker_ssh_options=$(
-	cat <<- HERE
-	--mount type="bind",src="$HOME/.ssh",dst="$docker_user_home/.ssh"
+	cat <<-HERE
+		--mount type="bind",src="$HOME/.ssh",dst="$docker_user_home/.ssh"
 	HERE
 )
 
@@ -192,18 +192,18 @@ unset docker_ssh_options
 ###############################################
 
 local docker_aws_options=$(
-	cat <<- HERE
-	-e AWS_ACCESS_KEY_ID \
-	-e AWS_SECRET_ACCESS_KEY \
-	-e AWS_SESSION_TOKEN \
-	-e AWS_DEFAULT_REGION \
-	-e AWS_DEFAULT_OUTPUT \
-	-e AWS_PROFILE \
-	-e AWS_CA_BUNDLE \
-	-e AWS_SHARED_CREDENTIALS_FILE \
-	-e AWS_CONFIG_FILE \
-	-e AWS_PROFILE \
-	--mount type="bind",src="$HOME/.aws",dst="$docker_user_home/.aws"
+	cat <<-HERE
+		-e AWS_ACCESS_KEY_ID \
+		-e AWS_SECRET_ACCESS_KEY \
+		-e AWS_SESSION_TOKEN \
+		-e AWS_DEFAULT_REGION \
+		-e AWS_DEFAULT_OUTPUT \
+		-e AWS_PROFILE \
+		-e AWS_CA_BUNDLE \
+		-e AWS_SHARED_CREDENTIALS_FILE \
+		-e AWS_CONFIG_FILE \
+		-e AWS_PROFILE \
+		--mount type="bind",src="$HOME/.aws",dst="$docker_user_home/.aws"
 	HERE
 )
 
@@ -224,22 +224,22 @@ docker() {
 
 	if [ "$DF_OS" = "$DF_OS_MACOS" ] && [ "$DF_ARCH" = "$DF_ARCH_ARM64" ]; then
 		case "$1" in
-			"build" | "create" | "run" )
-				command+=("--platform" "linux/amd64")
-				;;
+		"build" | "create" | "run")
+			command+=("--platform" "linux/amd64")
+			;;
 		esac
 	fi
 
 	case "$1" in
-		"build" )
-			command+=(docker.build.user docker.build.proxy)
-			;;
+	"build")
+		command+=(docker.build.user docker.build.proxy)
+		;;
 	esac
 
 	case "$1" in
-		"create" | "run" )
-			command+=(docker.user)
-			;;
+	"create" | "run")
+		command+=(docker.user)
+		;;
 	esac
 
 	command+=("${@:2}")

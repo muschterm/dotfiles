@@ -14,36 +14,35 @@ DF_OS_MACOS="macos"
 DF_OS_WINDOWS="windows"
 DF_WSL="false"
 case "$(uname -r)" in
-	*microsoft* )
-		DF_WSL="true"
-		;;
-	* )
-		;;
+*microsoft*)
+	DF_WSL="true"
+	;;
+*) ;;
 esac
 
 case "$(uname -s)" in
-	"Linux" )
-		DF_OS=$DF_OS_LINUX
+"Linux")
+	DF_OS=$DF_OS_LINUX
 
-		[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$HOME/.dotfiles.d/downloads"
-		[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="$HOME/.dotfiles.d/opt"
-		[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="$HOME/.dotfiles.d/app"
-		;;
-	"Darwin" )
-		DF_OS=$DF_OS_MACOS
+	[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$HOME/.dotfiles.d/downloads"
+	[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="$HOME/.dotfiles.d/opt"
+	[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="$HOME/.dotfiles.d/app"
+	;;
+"Darwin")
+	DF_OS=$DF_OS_MACOS
 
-		[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$HOME/.dotfiles.d/downloads"
-		[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="$HOME/.dotfiles.d/opt"
-		[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="/Applications"
-		;;
-	"MSYS"* | "MINGW"* | "CYGWIN"* )
-		DF_OS=$DF_OS_WINDOWS
-		: ${DEV_WINDOWS_DRIVELETTER:="c"}
+	[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$HOME/.dotfiles.d/downloads"
+	[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="$HOME/.dotfiles.d/opt"
+	[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="/Applications"
+	;;
+"MSYS"* | "MINGW"* | "CYGWIN"*)
+	DF_OS=$DF_OS_WINDOWS
+	: ${DEV_WINDOWS_DRIVELETTER:="c"}
 
-		[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$USERPROFILE/Downloads"
-		[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="/$DEV_WINDOWS_DRIVELETTER/dotfiles/opt"
-		[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="/$DEV_WINDOWS_DRIVELETTER/dotfiles/app"
-		;;
+	[ -z "$DF_DOWNLOADS_HOME" ] && export DF_DOWNLOADS_HOME="$USERPROFILE/Downloads"
+	[ -z "$DF_SOFTWARE_HOME" ] && export DF_SOFTWARE_HOME="/$DEV_WINDOWS_DRIVELETTER/dotfiles/opt"
+	[ -z "$DF_APP_HOME" ] && export DF_APP_HOME="/$DEV_WINDOWS_DRIVELETTER/dotfiles/app"
+	;;
 esac
 
 DF_ARCH=
@@ -53,18 +52,18 @@ DF_ARCH_X86_64="x86_64"
 DF_ARCH_X86_32="x86_32"
 
 case "$(uname -m)" in
-	arm64 | aarch64 | armv8* )
-		DF_ARCH="$DF_ARCH_ARM_64"
-		;;
-	armv7* | armv6* )
-		DF_ARCH="$DF_ARCH_ARM_32"
-		;;
-	x86_64 | amd64 )
-		DF_ARCH="$DF_ARCH_X86_64"
-		;;
-	i*86 )
-		DF_ARCH="$DF_ARCH_X86_32"
-		;;
+arm64 | aarch64 | armv8*)
+	DF_ARCH="$DF_ARCH_ARM_64"
+	;;
+armv7* | armv6*)
+	DF_ARCH="$DF_ARCH_ARM_32"
+	;;
+x86_64 | amd64)
+	DF_ARCH="$DF_ARCH_X86_64"
+	;;
+i*86)
+	DF_ARCH="$DF_ARCH_X86_32"
+	;;
 esac
 
 [ ! -d "$DF_DOWNLOADS_HOME" ] && mkdir -p "$DF_DOWNLOADS_HOME"
@@ -92,7 +91,7 @@ if [ "$DF_OS" = "$DF_OS_LINUX" ] || [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 	if [ "$DF_OS" = "$DF_OS_LINUX" ]; then
 		local_user="$(whoami)"
 		local_can_use_sudo="false"
-		if [ "$(id -u)" != "0" ] && command -v sudo > /dev/null; then
+		if [ "$(id -u)" != "0" ] && command -v sudo >/dev/null; then
 			local_can_use_sudo="true"
 		fi
 
@@ -102,8 +101,8 @@ if [ "$DF_OS" = "$DF_OS_LINUX" ] || [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 			sudo touch "/etc/sudoers.d/${local_user}"
 			sudo chmod 0777 "/etc/sudoers.d/${local_user}"
 
-			cat <<- HERE > "/etc/sudoers.d/${local_user}"
-			${local_user} ALL=(ALL) NOPASSWD: ALL
+			cat <<-HERE >"/etc/sudoers.d/${local_user}"
+				${local_user} ALL=(ALL) NOPASSWD: ALL
 			HERE
 
 			sudo chmod 0440 "/etc/sudoers.d/${local_user}"
@@ -151,7 +150,7 @@ if [ "$DF_OS" = "$DF_OS_LINUX" ] || [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 
 	if [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 		: ${DF_DOCKER_APP_HOME:="/Applications/Docker.app"}
-		if command -v brew > /dev/null; then
+		if command -v brew >/dev/null; then
 			local_brew_prefix="$(brew --prefix)"
 
 			if [ -n "$BASH_VERSION" ]; then
@@ -162,15 +161,15 @@ if [ "$DF_OS" = "$DF_OS_LINUX" ] || [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 			export PATH="${local_brew_prefix}/opt/coreutils/libexec/gnubin:$PATH"
 			export MANPATH="${local_brew_prefix}/opt/coreutils/libexec/gnuman:$MANPATH"
 			if [ ! -d "${local_brew_prefix}/opt/coreutils/libexec/gnubin" ]; then
-				cat <<- HERE
-				Homebrew 'coreutils' not installed!
+				cat <<-HERE
+					Homebrew 'coreutils' not installed!
 
 				HERE
 
 				brew install coreutils
 
-				cat <<- HERE
-				Homebrew 'coreutils' installed!
+				cat <<-HERE
+					Homebrew 'coreutils' installed!
 
 				HERE
 			fi
@@ -179,15 +178,15 @@ if [ "$DF_OS" = "$DF_OS_LINUX" ] || [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 			export PATH="${local_brew_prefix}/opt/gnu-sed/libexec/gnubin:$PATH"
 			export MANPATH="${local_brew_prefix}/opt/gnu-sed/libexec/gnuman:$MANPATH"
 			if [ ! -d "${local_brew_prefix}/opt/gnu-sed/libexec/gnubin" ]; then
-				cat <<- HERE
-				Homebrew 'gnu-sed' not installed!
+				cat <<-HERE
+					Homebrew 'gnu-sed' not installed!
 
 				HERE
 
 				brew install gnu-sed
 
-				cat <<- HERE
-				Homebrew 'gnu-sed' installed!
+				cat <<-HERE
+					Homebrew 'gnu-sed' installed!
 
 				HERE
 			fi
@@ -196,15 +195,15 @@ if [ "$DF_OS" = "$DF_OS_LINUX" ] || [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 			export PATH="${local_brew_prefix}/opt/gnu-tar/libexec/gnubin:$PATH"
 			export MANPATH="${local_brew_prefix}/opt/gnu-tar/libexec/gnuman:$PATH"
 			if [ ! -d "${local_brew_prefix}/opt/gnu-tar/libexec/gnubin" ]; then
-				cat <<- HERE
-				Homebrew 'gnu-tar' not installed!
+				cat <<-HERE
+					Homebrew 'gnu-tar' not installed!
 
 				HERE
 
 				brew install gnu-tar
 
-				cat <<- HERE
-				Homebrew 'gnu-tar' installed!
+				cat <<-HERE
+					Homebrew 'gnu-tar' installed!
 
 				HERE
 			fi
@@ -226,60 +225,60 @@ if [ "$DF_OS" = "$DF_OS_LINUX" ] || [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 
 			# jq (for handling JSON)
 			if [ ! -d "${local_brew_prefix}/opt/jq/bin" ]; then
-				cat <<- HERE
-				Homebrew 'jq' not installed!
+				cat <<-HERE
+					Homebrew 'jq' not installed!
 
 				HERE
 
 				brew install jq
 
-				cat <<- HERE
-				Homebrew 'jq' installed!
+				cat <<-HERE
+					Homebrew 'jq' installed!
 
 				HERE
 			fi
 
 			# python3
 			if [ ! -d "${local_brew_prefix}/opt/python3" ]; then
-				cat <<- HERE
-				Homebrew 'python' not installed!
+				cat <<-HERE
+					Homebrew 'python' not installed!
 
 				HERE
 
 				brew install python
 
-				cat <<- HERE
-				Homebrew 'python' installed!
+				cat <<-HERE
+					Homebrew 'python' installed!
 
 				HERE
 			fi
 
 			# rq (for handling YAML and XML)
 			if [ ! -f "${local_brew_prefix}/bin/yq" ]; then
-				cat <<- HERE
-				pip 'yq' not installed!
+				cat <<-HERE
+					pip 'yq' not installed!
 
 				HERE
 
 				pip3 install yq
 
-				cat <<- HERE
-				pip 'yq' installed!
+				cat <<-HERE
+					pip 'yq' installed!
 
 				HERE
 			fi
 
 			# HTTPie (for handling http REST calls)
 			if [ ! -d "${local_brew_prefix}/opt/httpie/bin" ]; then
-				cat <<- HERE
-				Homebrew 'httpie' not installed!
+				cat <<-HERE
+					Homebrew 'httpie' not installed!
 
 				HERE
 
 				brew install httpie
 
-				cat <<- HERE
-				Homebrew 'httpie' installed!
+				cat <<-HERE
+					Homebrew 'httpie' installed!
 
 				HERE
 			fi
@@ -300,7 +299,7 @@ if [ "$DF_OS" = "$DF_OS_LINUX" ] || [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 			[ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker.bash-completion" ] && . "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker.bash-completion"
 			[ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-machine.bash-completion" ] && . "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-machine.bash-completion"
 			[ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-compose.bash-completion" ] && . "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-compose.bash-completion"
-		
+
 			# Git
 			[ -r "/Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash" ] && . "/Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash"
 		fi

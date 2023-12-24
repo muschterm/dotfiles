@@ -1,9 +1,9 @@
 #!/usr/bin/env zsh
 
-cat <<- HERE
--------------------------------------------------------------------------------
-Installing dotfiles!
--------------------------------------------------------------------------------
+cat <<-HERE
+	-------------------------------------------------------------------------------
+	Installing dotfiles!
+	-------------------------------------------------------------------------------
 
 HERE
 
@@ -28,12 +28,12 @@ elif [ "$(uname -s)" = "Linux" ] || [ "$(uname -s)" = "Darwin" ]; then
 	if [ ! -z "$zshrc_line" ]; then
 		# delete old lines in .zshrc
 		mv "$HOME/.zshrc" "$HOME/.zshrc.bak"
-		sed "${zshrc_line},${zshrc_line}d" "$HOME/.zshrc.bak" > "$HOME/.zshrc"
+		sed "${zshrc_line},${zshrc_line}d" "$HOME/.zshrc.bak" >"$HOME/.zshrc"
 	fi
 
 	# add to bottom of .zshrc
-	cat <<- HERE >> "$HOME/.zshrc"
-	[ -f "\$HOME/.dotfiles.zsh" ] && . "\$HOME/.dotfiles.zsh"
+	cat <<-HERE >>"$HOME/.zshrc"
+		[ -f "\$HOME/.dotfiles.zsh" ] && . "\$HOME/.dotfiles.zsh"
 	HERE
 
 	if [ ! -f "$HOME/.dotfiles.zsh" ]; then
@@ -45,37 +45,36 @@ elif [ "$(uname -s)" = "Linux" ] || [ "$(uname -s)" = "Darwin" ]; then
 	if [ ! -z "$dotfiles_zsh_line" ]; then
 		# delete old lines in .dotfiles.zsh
 		mv "$HOME/.dotfiles.zsh" "$HOME/.dotfiles.zsh.bak"
-		sed "${dotfiles_zsh_line},${dotfiles_zsh_line}d" "$HOME/.dotfiles.zsh.bak" > "$HOME/.dotfiles.zsh"
+		sed "${dotfiles_zsh_line},${dotfiles_zsh_line}d" "$HOME/.dotfiles.zsh.bak" >"$HOME/.dotfiles.zsh"
 	fi
 
 	# add to top of .dotfiles.zsh
-	cat <<- HERE > "$HOME/.dotfiles.zsh.tmp"
-	export DOTFILES_DIR="$dotfiles_dir"; [ -f "\$DOTFILES_DIR/init" ] && . "\$DOTFILES_DIR/init"; autoload -Uz compinit && compinit
+	cat <<-HERE >"$HOME/.dotfiles.zsh.tmp"
+		export DOTFILES_DIR="$dotfiles_dir"; [ -f "\$DOTFILES_DIR/init" ] && . "\$DOTFILES_DIR/init"; autoload -Uz compinit && compinit
 	HERE
-	cat "$HOME/.dotfiles.zsh" >> "$HOME/.dotfiles.zsh.tmp"
+	cat "$HOME/.dotfiles.zsh" >>"$HOME/.dotfiles.zsh.tmp"
 	mv "$HOME/.dotfiles.zsh.tmp" "$HOME/.dotfiles.zsh"
 
 	if [ "$(uname -s)" = "Linux" ]; then
-		cat <<- HERE
-		"$HOME/.zprofile" and "$HOME/.zshrc" have been updated!
-		Please log out and log back in for changes to take affect.
+		cat <<-HERE
+			"$HOME/.zprofile" and "$HOME/.zshrc" have been updated!
+			Please log out and log back in for changes to take affect.
 		HERE
 	else
-		# Non-Linux OS's handle .profile during shell startup rather than a real user 
-		# login. Any new terminal windows will automatically source the user's updated 
+		# Non-Linux OS's handle .profile during shell startup rather than a real user
+		# login. Any new terminal windows will automatically source the user's updated
 		# .profile. Ensure the current terminal window has the .profile sourced.
 
-		cat <<- HERE
-		"$HOME/.zprofile" and "$HOME/.zshrc" have been updated!
-		Please close and open a new terminal window for changes to take affect.
+		cat <<-HERE
+			"$HOME/.zprofile" and "$HOME/.zshrc" have been updated!
+			Please close and open a new terminal window for changes to take affect.
 		HERE
 	fi
 fi
 
-cat <<- HERE
+cat <<-HERE
 
--------------------------------------------------------------------------------
-Finished!
--------------------------------------------------------------------------------
+	-------------------------------------------------------------------------------
+	Finished!
+	-------------------------------------------------------------------------------
 HERE
-

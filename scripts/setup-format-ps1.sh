@@ -4,9 +4,9 @@
 # ---
 
 nf_indent_line=$'\xee\x98\xa1'
-#  | nf-indent-line | UTF \ue621 | \xee\x98\xa1 
+#  | nf-indent-line | UTF \ue621 | \xee\x98\xa1
 #   hexdump
-#     0000000 98ee 00a1                              
+#     0000000 98ee 00a1
 #     0000003
 
 nf_oct_git_branch=$'\xef\x90\x98'
@@ -18,7 +18,7 @@ nf_oct_git_branch=$'\xef\x90\x98'
 nf_dev_git_branch=$'\xee\x9c\xa5'
 #  | nf-dev-git_branch | UTF \ue725 | \xee\x9c\xa5
 #   hexdump
-#     0000000 9cee 00a5                              
+#     0000000 9cee 00a5
 #     0000003
 
 upwards_dashed_arrow=$'\xe2\x87\xa1'
@@ -85,11 +85,11 @@ nf_md_docker=$'\xf3\xb0\xa1\xa8'
 nf_md_code_greater_than=$'\xf3\xb0\x85\xac'
 # 󰅬 | nf-md-code_greater_than | UTF \udb80\udd6c | \xf3\xb0\x85\xac
 #   hexdump
-#     0000000 b0f3 ac85                              
+#     0000000 b0f3 ac85
 #     0000004
 
 __get_git_branch() (
-	if command -v git > /dev/null; then
+	if command -v git >/dev/null; then
 		git_branch="$(git branch 2>/dev/null | grep '\*' | awk -F ' ' '{print $2}')"
 		if [ ! -z "$git_branch" ]; then
 			printf -- "$nf_oct_git_branch $git_branch"
@@ -114,7 +114,7 @@ __get_git_branch() (
 					# printf -- "\u2191$git_ahead"
 				fi
 
-				if [ $git_behind -gt 0 ]; then					
+				if [ $git_behind -gt 0 ]; then
 					printf -- "$downwards_dashed_arrow$git_behind"
 					# printf -- "\u2193$git_behind"
 					# printf -- "\U0001F813$git_behind"
@@ -129,37 +129,37 @@ __get_distro() (
 	if [ "$DF_OS" = "$DF_OS_LINUX" ]; then
 		distro="$(print-distro)"
 		case "$distro" in
-			"debian" )
-				local_ps1_prefix="$nf_linux_debian"
-				;;
-			"ubuntu" )
-				local_ps1_prefix="$nf_linux_ubuntu"
-				;;
-			"pop" )
-				local_ps1_prefix="$nf_linux_pop"
-				;;
-			"raspbian" )
-				local_ps1_prefix="\uF315"
-				;;
-			"alpine" )
-				local_ps1_prefix="\uF300"
-				;;
-			"arch" )
-				local_ps1_prefix="\uF303"
-				;;
-			"fedora" )
-				local_ps1_prefix="\uF30A"
-				;;
-			"centos" )
-				local_ps1_prefix="\uF304"
-				;;
-			"rhel" )
-				local_ps1_prefix="\uF316"
-				;;
-			* )
-				# penguin
-				local_ps1_prefix="$nf_linux_tux"
-				;;
+		"debian")
+			local_ps1_prefix="$nf_linux_debian"
+			;;
+		"ubuntu")
+			local_ps1_prefix="$nf_linux_ubuntu"
+			;;
+		"pop")
+			local_ps1_prefix="$nf_linux_pop"
+			;;
+		"raspbian")
+			local_ps1_prefix="\uF315"
+			;;
+		"alpine")
+			local_ps1_prefix="\uF300"
+			;;
+		"arch")
+			local_ps1_prefix="\uF303"
+			;;
+		"fedora")
+			local_ps1_prefix="\uF30A"
+			;;
+		"centos")
+			local_ps1_prefix="\uF304"
+			;;
+		"rhel")
+			local_ps1_prefix="\uF316"
+			;;
+		*)
+			# penguin
+			local_ps1_prefix="$nf_linux_tux"
+			;;
 		esac
 	elif [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 		local_ps1_prefix="$nf_linux_apple"
@@ -175,11 +175,9 @@ __get_distro() (
 	printf -- "$(_fmt $DF_ATTR_RESET_ALL)$local_ps1_prefix"
 )
 
-
 ###############################################################################
 # PS1                                                                         #
 ###############################################################################
-
 
 if [ -n "$ZSH_VERSION" ] && [ -z "$ZSH" ]; then
 	setopt PROMPT_SUBST

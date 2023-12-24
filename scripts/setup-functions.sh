@@ -143,7 +143,7 @@ http-call() {
 
 			newline
 			text -n -m "**Request Payload (CTRL + D To Complete):** "
-			
+
 			d="$(</dev/stdin)"
 			if [ ! -z "$(printf -- "$content_type" | grep "json")" ]; then
 				d="$(printf -- "$d" | jq -c)"
@@ -159,7 +159,7 @@ http-call() {
 
 		newline
 		text -m "**CURL Command:**"
-		text    "  $curl_command"
+		text "  $curl_command"
 
 		json=false
 		xml=false
@@ -168,8 +168,7 @@ http-call() {
 		curl_body=
 		curl_head=true
 
-		while IFS= read -r line
-		do 
+		while IFS= read -r line; do
 
 			line="$(printf -- "$line" | sed "s/\r//g;s/\n//g")"
 			if [ "$curl_head" = "true" ]; then
@@ -199,8 +198,8 @@ http-call() {
 					curl_body="$(printf -- "$curl_body\n$line")"
 				fi
 			fi
-		done <<- EOF
-		$curl_output
+		done <<-EOF
+			$curl_output
 		EOF
 
 		if [ ! -z "$curl_header_response" ]; then
@@ -215,11 +214,11 @@ http-call() {
 		elif [ "$xml" = "true" ]; then
 			printf -- "$curl_body" | xq -x .
 		else
-			cat <<- HERE | jq .
-			{
-				"status": $?,
-				"message": "Bad response! (not JSON, XML, or HTML)"
-			}
+			cat <<-HERE | jq .
+				{
+					"status": $?,
+					"message": "Bad response! (not JSON, XML, or HTML)"
+				}
 			HERE
 		fi
 	)
@@ -232,40 +231,37 @@ user-install-software() (
 	soft_zip_prefix=
 	soft_dmg_app=
 	soft_save_download_file=true
-	while [ -z "${1%%-*}" ]
-	# while [ "${1:0:1}" = "-" ] || [ "${1:0:2}" = "--" ]
-	do
+	while [ -z "${1%%-*}" ]; do # while [ "${1:0:1}" = "-" ] || [ "${1:0:2}" = "--" ]
 		case $1 in
-			"--home" )
-				shift
-				soft_home="$1"
-				shift
-				;;
-			"--tar-args" )
-				shift
-				soft_tar_args="$1"
-				shift
-				;;
-			"--dmg-vol" )
-				shift
-				soft_dmg_vol="$1"
-				shift
-				;;
-			"--dmg-app" )
-				shift
-				soft_dmg_app="$1"
-				shift
-				;;
-			"--save-download-file" )
-				shift
-				soft_save_download_file="$1"
-				shift
-				;;
-			"--" )
-				shift
-				;;
-			*)
-				;;
+		"--home")
+			shift
+			soft_home="$1"
+			shift
+			;;
+		"--tar-args")
+			shift
+			soft_tar_args="$1"
+			shift
+			;;
+		"--dmg-vol")
+			shift
+			soft_dmg_vol="$1"
+			shift
+			;;
+		"--dmg-app")
+			shift
+			soft_dmg_app="$1"
+			shift
+			;;
+		"--save-download-file")
+			shift
+			soft_save_download_file="$1"
+			shift
+			;;
+		"--")
+			shift
+			;;
+		*) ;;
 		esac
 	done
 
@@ -278,44 +274,43 @@ user-install-software() (
 
 	if [ -f "$soft_saved_download_location" ]; then
 		case "$soft_saved_download_location" in
-			*.zip )
-				mkdir -p "$soft_home"
-				unzip "$soft_saved_download_location" -d "$soft_home"
-				;;
+		*.zip)
+			mkdir -p "$soft_home"
+			unzip "$soft_saved_download_location" -d "$soft_home"
+			;;
 
-			*.tar.xz | *.txz )
-				mkdir -p "$soft_home"
+		*.tar.xz | *.txz)
+			mkdir -p "$soft_home"
 
-				if [ "$soft_save_download_file" = "true" ]; then
-					tar -xJf "$soft_saved_download_location" -C "$soft_home" "$soft_tar_args"
-				else
-					curl "$soft_download_url" | tar -xJ -C "$soft_home" "$soft_tar_args"
-				fi
+			if [ "$soft_save_download_file" = "true" ]; then
+				tar -xJf "$soft_saved_download_location" -C "$soft_home" "$soft_tar_args"
+			else
+				curl "$soft_download_url" | tar -xJ -C "$soft_home" "$soft_tar_args"
+			fi
 
-				;;
+			;;
 
-			*.tar.gz | *.tgz )
-				mkdir -p "$soft_home"
+		*.tar.gz | *.tgz)
+			mkdir -p "$soft_home"
 
-				if [ "$soft_save_download_file" = "true" ]; then
-					tar -xzf "$soft_saved_download_location" -C "$soft_home" "$soft_tar_args"
-				else
-					curl "$soft_download_url" | tar -xz -C "$soft_home" "$soft_tar_args"
-				fi
+			if [ "$soft_save_download_file" = "true" ]; then
+				tar -xzf "$soft_saved_download_location" -C "$soft_home" "$soft_tar_args"
+			else
+				curl "$soft_download_url" | tar -xz -C "$soft_home" "$soft_tar_args"
+			fi
 
-				;;
+			;;
 
-			*.dmg )
-				mkdir -p "$soft_home"
+		*.dmg)
+			mkdir -p "$soft_home"
 
-				hdiutil attach "$soft_saved_download_location"
-				cp -R "/Volumes/${soft_dmg_vol}/${soft_dmg_app}" "$soft_home"
-				hdiutil detach "/Volumes/${soft_dmg_vol}"
+			hdiutil attach "$soft_saved_download_location"
+			cp -R "/Volumes/${soft_dmg_vol}/${soft_dmg_app}" "$soft_home"
+			hdiutil detach "/Volumes/${soft_dmg_vol}"
 
-				;;
+			;;
 
-			* )
-				;;
+		*) ;;
 		esac
 	fi
 )

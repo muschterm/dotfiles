@@ -4,7 +4,8 @@
 export DF_ATTR_RESET_ALL="0"
 export DF_ATTR_RESET_BOLD="21"
 export DF_ATTR_RESET_DIM="22"
-if [ "${TERM:0:5}" = "xterm" ]; then
+# if [ "${TERM:0:5}" = "xterm" ]; then
+if [ ! -z "$TERM" ] && [ -z "${TERM%%xterm*}" ]; then
 	# xterm does not reset bold correctly
 	export DF_ATTR_RESET_BOLD=$DF_ATTR_RESET_DIM
 fi
