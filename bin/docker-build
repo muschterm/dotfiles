@@ -98,7 +98,7 @@ namespace=
 repository=$1
 tag=
 
-justrepository=$(echo $repository | cut -d '/' -f2 -s)
+justrepository=$(echo $repository | cut -d '/' -f2- -s)
 if [ ! -z "$justrepository" ]; then
 	namespace=$(echo $repository | cut -d '/' -f1 -s)
 	repository=$justrepository
@@ -108,7 +108,7 @@ if [ ! -z "$namespace" ]; then
 	namespace="$namespace/"
 fi
 
-justtag=$(echo $repository | cut -d ':' -f2 -s)
+justtag=$(echo $repository | cut -d ':' -f2- -s)
 if [ ! -z "$justtag" ]; then
 	repository=$(echo $repository | cut -d ':' -f1 -s)
 	tag=$justtag
@@ -142,7 +142,7 @@ if [ ! -z $tag ]; then
 	# get version and suffix
 	version=
 	suffix=
-	justsuffix=$(echo $tag | cut -d '-' -f2 -s)
+	justsuffix=$(echo $tag | cut -d '-' -f2- -s)
 	if [ ! -z "$justsuffix" ]; then
 		version=$(echo $tag | cut -d '-' -f1 -s)
 		suffix=$justsuffix
