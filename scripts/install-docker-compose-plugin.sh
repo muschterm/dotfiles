@@ -27,19 +27,16 @@ fi
 : ${DOCKER_CONFIG:="$HOME/.docker"}
 
 if [ "$(whoami)" = "root" ]; then
-	DOCKER_CONFIG="/usr/local/lib/docker"
+	if [ "$(print-distro)" = "alpine" ]; then
+		DOCKER_CONFIG="/usr/local/libexec/docker"
+	else
+		DOCKER_CONFIG="/usr/local/lib/docker"
+	fi
 fi
 
 mkdir -p "$DOCKER_CONFIG/cli-plugins"
 
 : ${DOCKER_COMPOSE_VERSION:="2.24.0"}
-
-if [ "$(print-distro)" = "alpine" ]; then
-	cat <<-HERE
-		For alpine, the following dependency packages are needed: py-pip, python3-dev, \
-		libffi-dev, openssl-dev, gcc, libc-dev, rust, cargo and make."
-	HERE
-fi
 
 if command -v curl >/dev/null; then
 	curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o "$DOCKER_CONFIG/cli-plugins/docker-compose"
