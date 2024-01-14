@@ -42,7 +42,8 @@ if [ "$(print-distro)" = "alpine" ]; then
 fi
 
 if command -v curl >/dev/null; then
-	curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o $DOCKER_CONFIG/cli-plugins/docker-compose
+	curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o "$DOCKER_CONFIG/cli-plugins/docker-compose"
+	chmod +x "$DOCKER_CONFIG/cli-plugins/docker-compose"
 else
 	printf -- "Cannot install docker-compose - missing curl.\n"
 fi
