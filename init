@@ -235,34 +235,34 @@ if [ "$DF_OS" = "$DF_OS_LINUX" ] || [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 			fi
 
 			# python3
-			if [ ! -d "${local_brew_prefix}/opt/python@3" ]; then
-				cat <<-HERE
-					Homebrew 'python' not installed!
+			# if [ ! -d "${local_brew_prefix}/opt/python@3" ]; then
+			# 	cat <<-HERE
+			# 		Homebrew 'python' not installed!
 
-				HERE
+			# 	HERE
 
-				brew install python
+			# 	brew install python
 
-				cat <<-HERE
-					Homebrew 'python' installed!
+			# 	cat <<-HERE
+			# 		Homebrew 'python' installed!
 
-				HERE
-			fi
+			# 	HERE
+			# fi
 
 			# rq (for handling YAML and XML)
-			if [ ! -f "${local_brew_prefix}/bin/yq" ]; then
-				cat <<-HERE
-					pip 'yq' not installed!
+			# if [ ! -f "${local_brew_prefix}/bin/yq" ]; then
+			# 	cat <<-HERE
+			# 		pip 'yq' not installed!
 
-				HERE
+			# 	HERE
 
-				pip3 install yq
+			# 	pip3 install yq
 
-				cat <<-HERE
-					pip 'yq' installed!
+			# 	cat <<-HERE
+			# 		pip 'yq' installed!
 
-				HERE
-			fi
+			# 	HERE
+			# fi
 
 			if [ -n "$BASH_VERSION" ]; then
 				[ -r "${local_brew_prefix}/etc/profile.d/bash_completion.sh" ] && . "${local_brew_prefix}/etc/profile.d/bash_completion.sh"
