@@ -317,3 +317,4 @@ fi
 . "$DOTFILES_DIR/scripts/setup-software-jb-toolbox.sh"
 . "$DOTFILES_DIR/scripts/setup-software-vscode.sh"
 . "$DOTFILES_DIR/scripts/setup-software-sublime.sh"
+. "$DOTFILES_DIR/scripts/setup-software-zed.sh"

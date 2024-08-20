@@ -1,18 +1,16 @@
-dotfiles
-===
+# dotfiles
 
 Repository that includes helpful terminal setup scripts.
 
 ### TL;DR
 
 - `install-*sh`
-    - A script that sets up a user's `zsh` or `bash` login shell to initialize the `init` script.  
+  - A script that sets up a user's `zsh` or `bash` login shell to initialize the `init` script.
 - `init`
-    - Sets up the terminal shell with useful scripts and installs software is specified.
-    - Ensure that `helper-functions` is loaded into the current shell to allow use of easier printing and formatting functions.
+  - Sets up the terminal shell with useful scripts and installs software is specified.
+  - Ensure that `helper-functions` is loaded into the current shell to allow use of easier printing and formatting functions.
 
-User Shell
----
+## User Shell
 
 Using the `install-*sh` script will set up the user's shell to leverage the `init` script.
 
@@ -30,11 +28,10 @@ Both `zsh` and `bash` are supported - `zsh` being the preferred script.
 
 #### Windows
 
-- If using *WSL*, the experience will not differ much from *Linux* as software, etc. will assume to be *Linux* rather than *Windows* specific.
-- If using *Cygwin* or *MINGW*, there are certain assumptions to use *Windows* binaries for software.
+- If using _WSL_, the experience will not differ much from _Linux_ as software, etc. will assume to be _Linux_ rather than _Windows_ specific.
+- If using _Cygwin_ or _MINGW_, there are certain assumptions to use _Windows_ binaries for software.
 
-Docker Images
----
+## Docker Images
 
 A `Dockerfile` should:
 
