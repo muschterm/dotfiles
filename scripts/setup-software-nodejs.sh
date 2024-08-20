@@ -6,7 +6,6 @@ if [ "$DF_SETUP_NODEJS" = "true" ]; then
 	export NODEJS_HOME="$DF_SOFTWARE_HOME/node-v${DF_NODEJS_VERSION}"
 
 	export PATH="$NODEJS_HOME/bin:$PATH"
-	export SOMETHING="something"
 
 	(
 		if [ ! -d "$NODEJS_HOME" ]; then
