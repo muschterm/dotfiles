@@ -5,6 +5,7 @@
     "args": ["."],
     "use_new_terminal": false,
     "allow_concurrent_runs": true,
-    "reveal": "never"
+    "reveal": "never",
+    "hide": "on_success"
   }
 ]

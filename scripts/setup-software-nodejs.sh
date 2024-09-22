@@ -2,7 +2,7 @@
 
 : ${DF_SETUP_NODEJS:="false"}
 if [ "$DF_SETUP_NODEJS" = "true" ]; then
-	: ${DF_NODEJS_VERSION:="20.16.0"}
+	: ${DF_NODEJS_VERSION:="20.17.0"}
 	export NODEJS_HOME="$DF_SOFTWARE_HOME/node-v${DF_NODEJS_VERSION}"
 
 	export PATH="$NODEJS_HOME/bin:$PATH"
