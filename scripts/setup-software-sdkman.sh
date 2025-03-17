@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 : ${DF_SETUP_SDKMAN:="false"}
 if [ "${DF_SETUP_SDKMAN}" = "true" ]; then
 	: ${SDKMAN_DIR:="$HOME/.sdkman"}

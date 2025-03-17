@@ -1,5 +1,3 @@
-#!/usr/bin/env zsh
-
 http-call() {
 	(
 		scheme_option_1="http"

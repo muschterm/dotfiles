@@ -1,5 +1,3 @@
-#!/usr/bin/env zsh
-
 : ${DOTFILES_DIR:="/opt/dotfiles"}
 
 . ${DOTFILES_DIR}/scripts/setup-format.sh

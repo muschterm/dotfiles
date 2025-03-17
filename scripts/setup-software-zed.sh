@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 : ${DF_SETUP_ZED:="false"}
 if [ "${DF_SETUP_ZED}" = "true" ]; then
 	if [ "$DF_OS" = "$DF_OS_MACOS" ]; then

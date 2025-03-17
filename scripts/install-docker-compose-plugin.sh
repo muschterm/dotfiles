@@ -1,5 +1,3 @@
-#!/usr/bin/env zsh
-
 if command -v apt >/dev/null; then
 	if docker compose version &>/dev/null; then
 		printf -- "Docker Compose already installed.\n\n"

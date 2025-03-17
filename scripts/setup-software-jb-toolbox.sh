@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 : ${DF_SETUP_JB_TOOLBOX:="false"}
 if [ "$DF_SETUP_JB_TOOLBOX" = "true" ]; then
 	# https://www.jetbrains.com/toolbox-app/download/other.html

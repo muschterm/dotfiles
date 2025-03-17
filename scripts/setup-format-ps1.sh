@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 # Nerd Font ICONs used
 # ---
 

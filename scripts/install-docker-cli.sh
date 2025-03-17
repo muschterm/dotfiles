@@ -1,5 +1,3 @@
-#!/usr/bin/env zsh
-
 if [ "$(whoami)" != "root" ]; then
 	echo Please run this script using sudo or as root.
 	exit

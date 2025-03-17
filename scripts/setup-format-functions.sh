@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 read_timeout() {
 	(
 		trap : USR1

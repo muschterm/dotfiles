@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 : ${DF_SETUP_VSCODE:="false"}
 if [ "${DF_SETUP_VSCODE}" = "true" ]; then
 	if [ "$DF_OS" = "$DF_OS_MACOS" ]; then

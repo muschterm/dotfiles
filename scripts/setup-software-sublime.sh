@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 : ${DF_SETUP_SUBLIME:="false"}
 if [ "${DF_SETUP_SUBLIME}" = "true" ]; then
 	if [ "$DF_OS" = "$DF_OS_MACOS" ]; then

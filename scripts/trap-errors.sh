@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 ##################################################
 #
 # This is useful for handling step by step scripts that should

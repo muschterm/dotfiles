@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 if [ "$(uname -s)" = "Linux" ]; then
 	# debian, ubuntu, pop, alpine, fedora, centos, rhel
 	awk -F "=" '{if ($1 == "ID") print $2}' /etc/*-release | awk -F '"' '{if ($2 != "") print $2; print $1}'

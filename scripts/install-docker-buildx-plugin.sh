@@ -1,5 +1,3 @@
-#!/usr/bin/env zsh
-
 if command -v apt >/dev/null; then
 	if docker buildx version &>/dev/null; then
 		printf -- "Docker Buildx already installed.\n\n"

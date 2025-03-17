@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 system="$(uname -s)"
 if [ "$system" = "Linux" ]; then
 	distro="$(print-distro)"

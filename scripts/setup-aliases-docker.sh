@@ -1,5 +1,3 @@
-#!/usr/bin/env zsh
-
 ###############################################
 #
 # User - Allow container to use the same user as the host.

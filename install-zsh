@@ -12,7 +12,7 @@ dotfiles_dir="${0:a:h}"
 ln -snf "$dotfiles_dir/.tmux.conf" "$HOME/.tmux.conf"
 
 if [ ! -z "$DOCKER_IMAGE_NAME" ]; then
-	ln -snf "$dotfiles_dir/init" "/etc/profile.d/init"
+	ln -snf "$dotfiles_dir/init.sh" "/etc/profile.d/init.sh"
 elif [ "$(uname -s)" = "Linux" ] || [ "$(uname -s)" = "Darwin" ]; then
 
 	if [ ! -f "$HOME/.zprofile" ]; then
@@ -50,7 +50,7 @@ elif [ "$(uname -s)" = "Linux" ] || [ "$(uname -s)" = "Darwin" ]; then
 
 	# add to top of .dotfiles.zsh
 	cat <<-HERE >"$HOME/.dotfiles.zsh.tmp"
-		export DOTFILES_DIR="$dotfiles_dir"; [ -f "\$DOTFILES_DIR/init" ] && . "\$DOTFILES_DIR/init"; autoload -Uz compinit && compinit
+		export DOTFILES_DIR="$dotfiles_dir"; [ -f "\$DOTFILES_DIR/init.sh" ] && . "\$DOTFILES_DIR/init.sh"; autoload -Uz compinit && compinit
 	HERE
 	cat "$HOME/.dotfiles.zsh" >>"$HOME/.dotfiles.zsh.tmp"
 	mv "$HOME/.dotfiles.zsh.tmp" "$HOME/.dotfiles.zsh"

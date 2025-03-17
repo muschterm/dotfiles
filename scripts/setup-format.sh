@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 # reset
 export DF_ATTR_RESET_ALL="0"
 export DF_ATTR_RESET_BOLD="21"

@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 : ${DF_SETUP_NODEJS:="false"}
 if [ "$DF_SETUP_NODEJS" = "true" ]; then
 	: ${DF_NODEJS_VERSION:="20.18.1"}

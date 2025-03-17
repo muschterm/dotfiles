@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 #
 # To be used as the entrypoint for Docker containers that need:
 #   - x11 display on the host (ie: use GUI programs)

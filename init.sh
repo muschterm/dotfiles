@@ -1,5 +1,3 @@
-#!/usr/bin/env zsh
-
 # allow vi editing
 # set -o vi
 
@@ -268,22 +266,24 @@ if [ "$DF_OS" = "$DF_OS_LINUX" ] || [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 				[ -r "${local_brew_prefix}/etc/profile.d/bash_completion.sh" ] && . "${local_brew_prefix}/etc/profile.d/bash_completion.sh"
 			fi
 
-			if [ -n "$ZSH_VERSION" ]; then
-				if [ ! -f "${local_brew_prefix}/share/zsh/site-functions/_docker" ]; then
-					[ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker.zsh-completion" ] && ln -s "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker.zsh-completion" "${local_brew_prefix}/share/zsh/site-functions/_docker"
-					[ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-machine.zsh-completion" ] && ln -s "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-machine.zsh-completion" "${local_brew_prefix}/share/zsh/site-functions/_docker-machine"
-					[ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-compose.zsh-completion" ] && ln -s "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-compose.zsh-completion" "${local_brew_prefix}/share/zsh/site-functions/_docker-compose"
-				fi
-			fi
+			# now handled by ./scripts/setup-software-docker.sh
+			# if [ -n "$ZSH_VERSION" ]; then
+			# 	if [ ! -f "${local_brew_prefix}/share/zsh/site-functions/_docker" ]; then
+			# 		[ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker.zsh-completion" ] && ln -s "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker.zsh-completion" "${local_brew_prefix}/share/zsh/site-functions/_docker"
+			# 		[ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-machine.zsh-completion" ] && ln -s "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-machine.zsh-completion" "${local_brew_prefix}/share/zsh/site-functions/_docker-machine"
+			# 		[ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-compose.zsh-completion" ] && ln -s "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-compose.zsh-completion" "${local_brew_prefix}/share/zsh/site-functions/_docker-compose"
+			# 	fi
+			# fi
 
 			unset local_brew_prefix
 		fi
 
 		if [ -n "$BASH_VERSION" ]; then
+			# now handled by ./scripts/setup-software-docker.sh
 			# Docker
-			[ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker.bash-completion" ] && . "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker.bash-completion"
-			[ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-machine.bash-completion" ] && . "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-machine.bash-completion"
-			[ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-compose.bash-completion" ] && . "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-compose.bash-completion"
+			# [ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker.bash-completion" ] && . "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker.bash-completion"
+			# [ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-machine.bash-completion" ] && . "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-machine.bash-completion"
+			# [ -r "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-compose.bash-completion" ] && . "${DF_DOCKER_APP_HOME}/Contents/Resources/etc/docker-compose.bash-completion"
 
 			# Git
 			[ -r "/Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash" ] && . "/Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash"
@@ -309,10 +309,12 @@ fi
 ###############################################################################
 # Software                                                                    #
 ###############################################################################
+. "$DOTFILES_DIR/scripts/setup-software-docker.sh"
 . "$DOTFILES_DIR/scripts/setup-software-sdkman.sh"
 . "$DOTFILES_DIR/scripts/setup-software-java.sh"
-. "$DOTFILES_DIR/scripts/setup-software-deno.sh"
 . "$DOTFILES_DIR/scripts/setup-software-nodejs.sh"
+. "$DOTFILES_DIR/scripts/setup-software-bun.sh"
+. "$DOTFILES_DIR/scripts/setup-software-deno.sh"
 . "$DOTFILES_DIR/scripts/setup-software-golang.sh"
 . "$DOTFILES_DIR/scripts/setup-software-jb-toolbox.sh"
 . "$DOTFILES_DIR/scripts/setup-software-vscode.sh"

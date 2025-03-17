@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 : ${DF_SETUP_GOLANG:="false"}
 if [ "$DF_SETUP_GOLANG" = "true" ]; then
 	: ${DF_GOLANG_VERSION:="1.23.1"}

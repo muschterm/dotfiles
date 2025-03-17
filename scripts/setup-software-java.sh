@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 : ${DF_SETUP_OPENJDK:="false"}
 if [ "$DF_SETUP_OPENJDK" = "true" ]; then
 	: ${DF_OPENJDK_VERSION:="16.0.1"}

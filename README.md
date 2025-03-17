@@ -6,7 +6,7 @@ Repository that includes helpful terminal setup scripts.
 
 - `install-*sh`
   - A script that sets up a user's `zsh` or `bash` login shell to initialize the `init` script.
-- `init`
+- `init.sh`
   - Sets up the terminal shell with useful scripts and installs software is specified.
   - Ensure that `helper-functions` is loaded into the current shell to allow use of easier printing and formatting functions.
 
