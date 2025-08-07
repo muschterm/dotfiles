@@ -312,6 +312,7 @@ fi
 . "$DOTFILES_DIR/scripts/setup-software-docker.sh"
 . "$DOTFILES_DIR/scripts/setup-software-sdkman.sh"
 . "$DOTFILES_DIR/scripts/setup-software-java.sh"
+. "$DOTFILES_DIR/scripts/setup-software-quarkus.sh"
 . "$DOTFILES_DIR/scripts/setup-software-nodejs.sh"
 . "$DOTFILES_DIR/scripts/setup-software-bun.sh"
 . "$DOTFILES_DIR/scripts/setup-software-deno.sh"
