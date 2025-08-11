@@ -7,7 +7,7 @@ if [ "${DF_SETUP_QUARKUS}" = "true" ]; then
 
 	: ${QUARKUS_DOT_DIR:="$HOME/.quarkus"}
 
-	alias set-quarkus-completion="quarkus completion > \"$QUARKUS_DOT_DIR/_quarkus\""
+	alias set-completion-quarkus="quarkus completion > \"$QUARKUS_DOT_DIR/_quarkus\""
 
 	if [ ! -d "$QUARKUS_DOT_DIR" ]; then
 		cat <<-HERE
@@ -18,7 +18,7 @@ if [ "${DF_SETUP_QUARKUS}" = "true" ]; then
  
 		cat <<-HERE
 			# after upgrading Quarkus, run to ensure completions are accurate:
-			set-quarkus-completion
+			set-completion-quarkus
 		HERE
 	fi
 
