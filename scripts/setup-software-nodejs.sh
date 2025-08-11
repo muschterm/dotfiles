@@ -1,6 +1,6 @@
 : ${DF_SETUP_NODEJS:="false"}
 if [ "$DF_SETUP_NODEJS" = "true" ]; then
-	: ${DF_NODEJS_VERSION:="20.18.1"}
+	: ${DF_NODEJS_VERSION:="24.5.0"}
 	export NODEJS_HOME="$DF_SOFTWARE_HOME/node-v${DF_NODEJS_VERSION}"
 
 	export PATH="$NODEJS_HOME/bin:$PATH"
@@ -36,6 +36,21 @@ if [ "$DF_SETUP_NODEJS" = "true" ]; then
 			user-install-software --home "$NODEJS_HOME" --tar-args "--strip-components=1" "$download_url" "$saved_download_location"
 		fi
 	)
+
+	# completions
+	alias set-completions-npm="npm completion > \"$NODEJS_HOME/completions/_npm\""
+	if [ ! -f "$NODEJS_HOME/completions/_npm" ]; then
+		mkdir -p "$NODEJS_HOME/completions"
+		npm completion > "$NODEJS_HOME/completions/_npm"
+		
+		cat <<-HERE
+			# after upgrading npm (or node), run to ensure completions are accurate:
+			set-completions-npm
+		HERE
+	fi
+
+	[ -s "$NODEJS_HOME/completions/_npm" ] && source "$NODEJS_HOME/completions/_npm"
+
 fi
 
 # npm config setup

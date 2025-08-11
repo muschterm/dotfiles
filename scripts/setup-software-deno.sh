@@ -16,7 +16,7 @@ if [ "${DF_SETUP_DENO}" = "true" ]; then
 
 	# completions
 	if [ -n "$ZSH_VERSION" ]; then
-		alias set-completion-deno="deno completions zsh > \"$DENO_INSTALL/completions/_deno\""
+		alias set-completions-deno="deno completions zsh > \"$DENO_INSTALL/completions/_deno\""
 
 		if [ ! -f "$DENO_INSTALL/completions/_deno" ]; then
 			mkdir -p "$DENO_INSTALL/completions"
@@ -24,13 +24,13 @@ if [ "${DF_SETUP_DENO}" = "true" ]; then
 
 			cat <<-HERE
 				# after upgrading deno, run to ensure zsh completions are accurate:
-				set-completion-deno
+				set-completions-deno
 			HERE
 		fi
 
 		export FPATH="$DENO_INSTALL/completions:$FPATH"
 	elif [ -n "$BASH_VERSION" ]; then
-		alias set-completion-deno="deno completions bash > \"$HOME/.local/share/bash-completion/completions/deno\""
+		alias set-completions-deno="deno completions bash > \"$HOME/.local/share/bash-completion/completions/deno\""
 
 		if [ ! -f "$HOME/.local/share/bash-completion/completions/deno" ]; then
 			mkdir -p "$HOME/.local/share/bash-completion/completions"
@@ -38,7 +38,7 @@ if [ "${DF_SETUP_DENO}" = "true" ]; then
 
 			cat <<-HERE
 				# after upgrading deno, run to ensure bash completions are accurate:
-				set-completion-deno
+				set-completions-deno
 			HERE
 
 		fi

@@ -7,25 +7,18 @@ if [ "${DF_SETUP_QUARKUS}" = "true" ]; then
 
 	: ${QUARKUS_DOT_DIR:="$HOME/.quarkus"}
 
-	alias set-completion-quarkus="quarkus completion > \"$QUARKUS_DOT_DIR/_quarkus\""
+	# completions
+	alias set-completions-quarkus="quarkus completion > \"$QUARKUS_DOT_DIR/completions/_quarkus\""
+	if [ ! -f "$QUARKUS_DOT_DIR/completions/_quarkus" ]; then
+		mkdir -p "$QUARKUS_DOT_DIR/completions"
+		quarkus completion > "$QUARKUS_DOT_DIR/completions/_quarkus"
 
-	if [ ! -d "$QUARKUS_DOT_DIR" ]; then
-		cat <<-HERE
-			Installing Quarkus Completions into "$QUARKUS_DOT_DIR"...
-		HERE
-
-		mkdir -p "$QUARKUS_DOT_DIR"
- 
 		cat <<-HERE
 			# after upgrading Quarkus, run to ensure completions are accurate:
-			set-completion-quarkus
+			set-completions-quarkus
 		HERE
 	fi
 
-	if [ ! -f "$QUARKUS_DOT_DIR/_quarkus" ]; then
-		quarkus completion > "$QUARKUS_DOT_DIR/_quarkus"
-	fi
-
-	[ -s "$QUARKUS_DOT_DIR/_quarkus" ] && source "$QUARKUS_DOT_DIR/_quarkus"
+	[ -s "$QUARKUS_DOT_DIR/completions/_quarkus" ] && source "$QUARKUS_DOT_DIR/completions/_quarkus"
 
 fi

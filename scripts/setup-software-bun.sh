@@ -4,8 +4,6 @@ if [ "${DF_SETUP_BUN}" = "true" ]; then
 
 	export PATH="$BUN_INSTALL/bin:$PATH"
 
-	alias set-completion-bun="bun completions"
-
 	if [ ! -d "$BUN_INSTALL" ]; then
 		cat <<-HERE
 			Installing Bun into "$BUN_INSTALL"...
@@ -17,12 +15,13 @@ if [ "${DF_SETUP_BUN}" = "true" ]; then
 	fi
 
 	# completions
+	alias set-completions-bun="bun completions"
 	if [ ! -f "$BUN_INSTALL/_bun" ]; then
 		bun completions
 		
 		cat <<-HERE
 			# after upgrading bun, run to ensure completions are accurate:
-			set-completion-bun
+			set-completions-bun
 		HERE
 	fi
 
