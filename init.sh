@@ -317,6 +317,7 @@ fi
 . "$DOTFILES_DIR/scripts/setup-software-bun.sh"
 . "$DOTFILES_DIR/scripts/setup-software-deno.sh"
 . "$DOTFILES_DIR/scripts/setup-software-golang.sh"
+. "$DOTFILES_DIR/scripts/setup-software-codex.sh"
 . "$DOTFILES_DIR/scripts/setup-software-jb-toolbox.sh"
 . "$DOTFILES_DIR/scripts/setup-software-vscode.sh"
 . "$DOTFILES_DIR/scripts/setup-software-sublime.sh"
