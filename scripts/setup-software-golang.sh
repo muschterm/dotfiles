@@ -1,6 +1,6 @@
 : ${DF_SETUP_GOLANG:="false"}
 if [ "$DF_SETUP_GOLANG" = "true" ]; then
-	: ${DF_GOLANG_VERSION:="1.23.1"}
+	: ${DF_GOLANG_VERSION:="1.25.1"}
 	export GOROOT="$DF_SOFTWARE_HOME/go-${DF_GOLANG_VERSION}"
 
 	# setup GOPATH

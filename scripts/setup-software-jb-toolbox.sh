@@ -1,7 +1,7 @@
 : ${DF_SETUP_JB_TOOLBOX:="false"}
 if [ "$DF_SETUP_JB_TOOLBOX" = "true" ]; then
 	# https://www.jetbrains.com/toolbox-app/download/other.html
-	: ${DF_JB_TOOLBOX_VERSION:="2.1.3.18901"}
+	: ${DF_JB_TOOLBOX_VERSION:="2.8.1.52155"}
 
 	(
 		if [ ! -f "$DF_APP_HOME/jetbrains-toolbox" ] && [ ! -d "$DF_APP_HOME/JetBrains Toolbox.app" ]; then
