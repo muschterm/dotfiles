@@ -216,11 +216,12 @@ unset docker_aws_options
 ###############################################
 
 DF_DOCKER_LOCATION=$(which docker)
+: ${DF_FORCE_AMD64_DOCKER:="false"}
 
 docker() {
 	local command=("$DF_DOCKER_LOCATION" "$1")
 
-	if [ "$DF_OS" = "$DF_OS_MACOS" ] && [ "$DF_ARCH" = "$DF_ARCH_ARM64" ]; then
+	if [ "$DF_OS" = "$DF_OS_MACOS" ] && [ "$DF_ARCH" = "$DF_ARCH_ARM64" ] && [ "$DF_FORCE_AMD64_DOCKER" = "true" ]; then
 		case "$1" in
 		"build" | "create" | "run")
 			command+=("--platform" "linux/amd64")

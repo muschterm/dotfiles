@@ -12,3 +12,6 @@ DF_SETUP_VSCODE="true"
 DF_SETUP_ZED="true"
 
 # DF_NODEJS_VERSION="22.9.0"
+
+# ensure all built images use amd64 instead of arm64
+DF_FORCE_AMD64_DOCKER="false"
