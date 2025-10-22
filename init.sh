@@ -77,8 +77,14 @@ elif [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 	alias copy="pbcopy"
 fi
 
-alias ls="ls -X --group-directories-first --color"
-alias la="ls -AXl --group-directories-first --color"
+if ! command -v eza >/dev/null; then
+	alias ls="ls -X --group-directories-first --color"
+	alias la="ls -Al"
+else
+	alias ls="eza --sort extension --group-directories-first --icons=auto"
+	alias la="ls --all --long --group"
+	alias lt="eza --no-permissions --no-user --no-time --no-filesize --all --long --icons=auto --tree --level"
+fi
 
 . "$DOTFILES_DIR/scripts/setup-aliases-docker.sh"
 
