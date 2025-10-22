@@ -309,6 +309,7 @@ fi
 ###############################################################################
 # Software                                                                    #
 ###############################################################################
+. "$DOTFILES_DIR/scripts/setup-software-starship.sh"
 . "$DOTFILES_DIR/scripts/setup-software-docker.sh"
 . "$DOTFILES_DIR/scripts/setup-software-sdkman.sh"
 . "$DOTFILES_DIR/scripts/setup-software-java.sh"

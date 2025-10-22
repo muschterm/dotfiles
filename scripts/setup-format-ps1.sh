@@ -171,28 +171,31 @@ __get_distro() (
 	fi
 
 	printf -- "$(_fmt $DF_ATTR_RESET_ALL)$local_ps1_prefix"
+
+	unset local_ps1_prefix
 )
 
-###############################################################################
-# PS1                                                                         #
-###############################################################################
+: ${DF_SETUP_PS1:="false"}
+if [ "${DF_SETUP_PS1}" = "true" ]; then
+	###############################################################################
+	# PS1                                                                         #
+	###############################################################################
 
-if [ -n "$ZSH_VERSION" ] && [ -z "$ZSH" ]; then
-	setopt PROMPT_SUBST
-fi
-
-if [ "$(id -u)" = "0" ]; then
-	if [ -n "$BASH_VERSION" ]; then
-		PS1=$'\n'"\$(__get_distro) $nf_indent_line $(_fmt $DF_FMT_BOLD $DF_FG_RED)\u$(_fmt $DF_ATTR_RESET_ALL) $nf_indent_line $(_fmt $DF_FMT_BOLD $DF_FG_BLUE)\w$(_fmt $DF_ATTR_RESET_ALL) $nf_indent_line $(_fmt $DF_FG_GREEN)\$(__get_git_branch)$(_fmt $DF_ATTR_RESET_ALL)\n# "
-	elif [ -n "$ZSH_VERSION" ] && [ -z "$ZSH" ]; then
-		PS1=$'\n'"\$(__get_distro) $nf_indent_line $(_fmt $DF_FMT_BOLD $DF_FG_RED)%n$(_fmt $DF_ATTR_RESET_ALL) $nf_indent_line $(_fmt $DF_FMT_BOLD $DF_FG_BLUE)%~$(_fmt $DF_ATTR_RESET_ALL) $nf_indent_line $(_fmt $DF_FG_GREEN)\$(__get_git_branch)$(_fmt $DF_ATTR_RESET_ALL)"$'\n# '
+	if [ -n "$ZSH_VERSION" ] && [ -z "$ZSH" ]; then
+		setopt PROMPT_SUBST
 	fi
-else
-	if [ -n "$BASH_VERSION" ]; then
-		PS1=$'\n'"\$(__get_distro) $nf_indent_line $(_fmt $DF_FMT_BOLD)\u$(_fmt $DF_ATTR_RESET_ALL) $nf_indent_line $(_fmt $DF_FMT_BOLD $DF_FG_BLUE)\w$(_fmt $DF_ATTR_RESET_ALL) $nf_indent_line $(_fmt $DF_FG_GREEN)\$(__get_git_branch)$(_fmt $DF_ATTR_RESET_ALL)\n\$ "
-	elif [ -n "$ZSH_VERSION" ] && [ -z "$ZSH" ]; then
-		PS1=$'\n'"\$(__get_distro) $nf_indent_line $(_fmt $DF_FMT_BOLD)%n$(_fmt $DF_ATTR_RESET_ALL) $nf_indent_line $(_fmt $DF_FMT_BOLD $DF_FG_BLUE)%~$(_fmt $DF_ATTR_RESET_ALL) $nf_indent_line $(_fmt $DF_FG_GREEN)\$(__get_git_branch)$(_fmt $DF_ATTR_RESET_ALL)"$'\n'"$nf_md_code_greater_than "
+
+	if [ "$(id -u)" = "0" ]; then
+		if [ -n "$BASH_VERSION" ]; then
+			PS1=$'\n'"\$(__get_distro) $nf_indent_line $(_fmt $DF_FMT_BOLD $DF_FG_RED)\u$(_fmt $DF_ATTR_RESET_ALL) $nf_indent_line $(_fmt $DF_FMT_BOLD $DF_FG_BLUE)\w$(_fmt $DF_ATTR_RESET_ALL) $nf_indent_line $(_fmt $DF_FG_GREEN)\$(__get_git_branch)$(_fmt $DF_ATTR_RESET_ALL)\n# "
+		elif [ -n "$ZSH_VERSION" ] && [ -z "$ZSH" ]; then
+			PS1=$'\n'"\$(__get_distro) $nf_indent_line $(_fmt $DF_FMT_BOLD $DF_FG_RED)%n$(_fmt $DF_ATTR_RESET_ALL) $nf_indent_line $(_fmt $DF_FMT_BOLD $DF_FG_BLUE)%~$(_fmt $DF_ATTR_RESET_ALL) $nf_indent_line $(_fmt $DF_FG_GREEN)\$(__get_git_branch)$(_fmt $DF_ATTR_RESET_ALL)"$'\n# '
+		fi
+	else
+		if [ -n "$BASH_VERSION" ]; then
+			PS1=$'\n'"\$(__get_distro) $nf_indent_line $(_fmt $DF_FMT_BOLD)\u$(_fmt $DF_ATTR_RESET_ALL) $nf_indent_line $(_fmt $DF_FMT_BOLD $DF_FG_BLUE)\w$(_fmt $DF_ATTR_RESET_ALL) $nf_indent_line $(_fmt $DF_FG_GREEN)\$(__get_git_branch)$(_fmt $DF_ATTR_RESET_ALL)\n\$ "
+		elif [ -n "$ZSH_VERSION" ] && [ -z "$ZSH" ]; then
+			PS1=$'\n'"\$(__get_distro) $nf_indent_line $(_fmt $DF_FMT_BOLD)%n$(_fmt $DF_ATTR_RESET_ALL) $nf_indent_line $(_fmt $DF_FMT_BOLD $DF_FG_BLUE)%~$(_fmt $DF_ATTR_RESET_ALL) $nf_indent_line $(_fmt $DF_FG_GREEN)\$(__get_git_branch)$(_fmt $DF_ATTR_RESET_ALL)"$'\n'"$nf_md_code_greater_than "
+		fi
 	fi
 fi
-
-unset local_ps1_prefix

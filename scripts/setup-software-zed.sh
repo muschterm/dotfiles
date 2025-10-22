@@ -1,7 +1,7 @@
 : ${DF_SETUP_ZED:="false"}
 if [ "${DF_SETUP_ZED}" = "true" ]; then
 	if [ "$DF_OS" = "$DF_OS_MACOS" ]; then
-	export ZED_HOME="$DF_APP_HOME/Zed.app"
+		export ZED_HOME="$DF_APP_HOME/Zed.app"
 		if [ -d "${ZED_HOME}/Contents/MacOS" ]; then
 			export ZED_OPT_HOME="$DF_SOFTWARE_HOME/zed"
 			export PATH="$ZED_OPT_HOME/bin:$PATH"
