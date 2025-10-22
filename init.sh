@@ -83,7 +83,7 @@ if ! command -v eza >/dev/null; then
 else
 	alias ls="eza --sort extension --group-directories-first --icons=auto"
 	alias la="ls --all --long --group"
-	alias lt="eza --no-permissions --no-user --no-time --no-filesize --all --long --icons=auto --tree --level"
+	alias lt="eza --no-permissions --no-user --no-time --no-filesize --all --long --sort extension --group-directories-first --icons=auto --tree --level"
 fi
 
 . "$DOTFILES_DIR/scripts/setup-aliases-docker.sh"
