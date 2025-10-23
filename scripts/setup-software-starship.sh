@@ -6,19 +6,19 @@ if [ "${DF_SETUP_STARSHIP}" = "true" ]; then
 
 	if ! command -v starship >/dev/null; then
 		cat <<-HERE
-			Installing Starship! into "$STARSHIP_DIR"...
+			Installing Starship! into "$STARSHIP_HOME"...
 		HERE
 
 		mkdir -p "$STARSHIP_HOME/bin"
 
 		(
-			curl -sS https://starship.rs/install.sh | sh -s -- -b "$STARSHIP_HOME/bin"
+			curl -sS https://starship.rs/install.sh | sh -s -- -y -b "$STARSHIP_HOME/bin"
 		)
 	fi
 
 	if [ -n "$ZSH_VERSION" ]; then
 		# completions
-		alias set-completions-starship="starship completions zsh> \"$STARSHIP_HOME/completions/_starship\""
+		alias set-completions-starship="starship completions zsh > \"$STARSHIP_HOME/completions/_starship\""
 
 		if [ ! -f "$STARSHIP_HOME/completions/_starship" ]; then
 			mkdir -p "$STARSHIP_HOME/completions"
@@ -35,7 +35,7 @@ if [ "${DF_SETUP_STARSHIP}" = "true" ]; then
 		eval "$(starship init zsh)"
 	elif [ -n "$BASH_VERSION" ]; then
 		# completions
-		alias set-completions-docker="starship completions bash> \"$HOME/.local/share/bash-completion/completions/starship\""
+		alias set-completions-mise="starship completions bash > \"$HOME/.local/share/bash-completion/completions/starship\""
 
 		if [ ! -f "$HOME/.local/share/bash-completion/completions/starship" ]; then
 			mkdir -p "$HOME/.local/share/bash-completion/completions"

@@ -5,13 +5,13 @@ if [ "${DF_SETUP_CODEX}" = "true" ]; then
 		return 0
 	fi
 
-	: ${CODEX_DOT_DIR:="$HOME/.codex"}
+	: ${CODEX_DOTFILES_DIR:="$DF_SOFTWARE_HOME/codex"}
 
 	# completions
-	alias set-completions-codex="codex completion zsh > \"$CODEX_DOT_DIR/completions/_codex\""
-	if [ ! -f "$CODEX_DOT_DIR/completions/_codex" ]; then
-		mkdir -p "$CODEX_DOT_DIR/completions"
-		codex completion zsh > "$CODEX_DOT_DIR/completions/_codex"
+	alias set-completions-codex="codex completion zsh > \"$CODEX_DOTFILES_DIR/completions/_codex\""
+	if [ ! -f "$CODEX_DOTFILES_DIR/completions/_codex" ]; then
+		mkdir -p "$CODEX_DOTFILES_DIR/completions"
+		codex completion zsh > "$CODEX_DOTFILES_DIR/completions/_codex"
 
 		cat <<-HERE
 			# after upgrading Codex, run to ensure completions are accurate:
@@ -19,5 +19,5 @@ if [ "${DF_SETUP_CODEX}" = "true" ]; then
 		HERE
 	fi
 
-	[ -s "$CODEX_DOT_DIR/completions/_codex" ] && source "$CODEX_DOT_DIR/completions/_codex"
+	[ -s "$CODEX_DOTFILES_DIR/completions/_codex" ] && source "$CODEX_DOTFILES_DIR/completions/_codex"
 fi

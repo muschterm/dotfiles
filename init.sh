@@ -68,27 +68,6 @@ esac
 [ ! -d "$DF_SOFTWARE_HOME" ] && mkdir -p "$DF_SOFTWARE_HOME"
 
 ###############################################################################
-# Aliases                                                                     #
-###############################################################################
-if [ "$DF_OS" = "$DF_OS_LINUX" ]; then
-	alias open="xdg-open &>/dev/null"
-	alias copy="xclip -selection clipboard"
-elif [ "$DF_OS" = "$DF_OS_MACOS" ]; then
-	alias copy="pbcopy"
-fi
-
-if ! command -v eza >/dev/null; then
-	alias ls="ls -X --group-directories-first --color"
-	alias la="ls -Al"
-else
-	alias ls="eza --sort extension --group-directories-first --icons=auto"
-	alias la="ls --all --long --group"
-	alias lt="eza --no-permissions --no-user --no-time --no-filesize --all --long --sort extension --group-directories-first --icons=auto --tree --level"
-fi
-
-. "$DOTFILES_DIR/scripts/setup-aliases-docker.sh"
-
-###############################################################################
 # Setup/Path                                                                  #
 ###############################################################################
 if [ "$DF_OS" = "$DF_OS_LINUX" ] || [ "$DF_OS" = "$DF_OS_MACOS" ]; then
@@ -224,19 +203,19 @@ if [ "$DF_OS" = "$DF_OS_LINUX" ] || [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 			# fi
 
 			# jq (for handling JSON)
-			if [ ! -d "${local_brew_prefix}/opt/jq/bin" ]; then
-				cat <<-HERE
-					Homebrew 'jq' not installed!
+			# if [ ! -d "${local_brew_prefix}/opt/jq/bin" ]; then
+			# 	cat <<-HERE
+			# 		Homebrew 'jq' not installed!
 
-				HERE
+			# 	HERE
 
-				brew install jq
+			# 	brew install jq
 
-				cat <<-HERE
-					Homebrew 'jq' installed!
+			# 	cat <<-HERE
+			# 		Homebrew 'jq' installed!
 
-				HERE
-			fi
+			# 	HERE
+			# fi
 
 			# python3
 			# if [ ! -d "${local_brew_prefix}/opt/python@3" ]; then
@@ -315,6 +294,7 @@ fi
 ###############################################################################
 # Software                                                                    #
 ###############################################################################
+. "$DOTFILES_DIR/scripts/setup-software-mise.sh"
 . "$DOTFILES_DIR/scripts/setup-software-starship.sh"
 . "$DOTFILES_DIR/scripts/setup-software-docker.sh"
 . "$DOTFILES_DIR/scripts/setup-software-sdkman.sh"
@@ -329,3 +309,36 @@ fi
 . "$DOTFILES_DIR/scripts/setup-software-vscode.sh"
 . "$DOTFILES_DIR/scripts/setup-software-sublime.sh"
 . "$DOTFILES_DIR/scripts/setup-software-zed.sh"
+
+###############################################################################
+# Aliases                                                                     #
+###############################################################################
+if [ "$DF_OS" = "$DF_OS_LINUX" ]; then
+	alias open="xdg-open &>/dev/null"
+	alias copy="xclip -selection clipboard"
+elif [ "$DF_OS" = "$DF_OS_MACOS" ]; then
+	alias copy="pbcopy"
+fi
+
+if command -v eza >/dev/null; then
+	alias ls="eza --sort extension --group-directories-first --icons=auto"
+	alias la="ls --all --long --group --time-style=long-iso"
+	alias lt="ls --no-permissions --no-user --no-time --no-filesize --all --long --tree --level"
+else
+	if [ "$DF_OS" = "$DF_OS_MACOS" ]; then
+		if command -v gls >/dev/null; then
+			alias -g ls.command="gls --group-directories-first"
+		elif command -v coreutils >/dev/null; then
+			alias -g ls.command="coreutils ls --group-directories-first"
+		else
+			alias -g ls.command="ls"
+		fi
+	elif [ "$DF_OS" = "$DF_OS_LINUX" ]; then
+		alias -g ls.command="ls --group-directories-first"
+	fi
+
+	alias ls="ls.command -X --color"
+	alias la="ls -Al"
+fi
+
+. "$DOTFILES_DIR/scripts/setup-aliases-docker.sh"

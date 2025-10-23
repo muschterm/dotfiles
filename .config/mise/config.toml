@@ -1,0 +1,14 @@
+[tools]
+usage = "latest"
+node = "24"
+bun = "1"
+deno = "2"
+java = "oracle-25"
+maven = "latest"
+gradle = "latest"
+coreutils = { version = "latest", os = ["macos", "windows"] }
+eza = "latest"
+jq = "latest"
+ripgrep = { version = "latest", os = ["windows"] }
+lazydocker = "latest"
+lazygit = "latest"

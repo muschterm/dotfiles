@@ -1,12 +1,14 @@
 : ${DF_SETUP_DOCKER:="false"}
 if [ "${DF_SETUP_DOCKER}" = "true" ]; then
+	: ${DOCKER_DOTFILES_DIR:="$DF_SOFTWARE_HOME/docker"}
+
 	# completions
 	if [ -n "$ZSH_VERSION" ]; then
-		alias set-completions-docker="docker completion zsh> \"$HOME/.docker/completions/_docker\""
+		alias set-completions-docker="docker completion zsh> \"$DOCKER_DOTFILES_DIR/completions/_docker\""
 
-		if [ ! -f "$HOME/.docker/completions/_docker" ]; then
-			mkdir -p "$HOME/.docker/completions"
-			docker completion zsh > "$HOME/.docker/completions/_docker"
+		if [ ! -f "$DOCKER_DOTFILES_DIR/completions/_docker" ]; then
+			mkdir -p "$DOCKER_DOTFILES_DIR/completions"
+			docker completion zsh > "$DOCKER_DOTFILES_DIR/completions/_docker"
 
 			cat <<-HERE
 				# after upgrading docker, run to ensure zsh completions are accurate:
@@ -14,7 +16,7 @@ if [ "${DF_SETUP_DOCKER}" = "true" ]; then
 			HERE
 		fi
 
-		export FPATH="$HOME/.docker/completions:$FPATH"
+		export FPATH="$DOCKER_DOTFILES_DIR/completions:$FPATH"
 	elif [ -n "$BASH_VERSION" ]; then
 		alias set-completions-docker="docker completion bash> \"$HOME/.local/share/bash-completion/completions/docker\""
 
