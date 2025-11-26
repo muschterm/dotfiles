@@ -6,9 +6,10 @@ deno = "2"
 java = "oracle-25"
 maven = "latest"
 gradle = "latest"
-coreutils = { version = "latest", os = ["macos", "windows"] }
 eza = "latest"
 jq = "latest"
-ripgrep = { version = "latest", os = ["windows"] }
+# https://www.lazyvim.org/installation
+neovim = "latest"
 lazydocker = "latest"
 lazygit = "latest"
+fd = "latest"

@@ -3,7 +3,31 @@
     "source.fixAll": "explicit"
   },
   "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.detectIndentation": false,
+  "[dotenv]": {
+    "editor.defaultFormatter": null
+  },
+  "[bats]": {
+    "editor.defaultFormatter": "lumirelle.shell-format-rev"
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "lumirelle.shell-format-rev"
+  },
+  "[hosts]": {
+    "editor.defaultFormatter": "lumirelle.shell-format-rev"
+  },
+  "[ignore]": {
+    "editor.defaultFormatter": "lumirelle.shell-format-rev"
+  },
+  "[jvmoptions]": {
+    "editor.defaultFormatter": "lumirelle.shell-format-rev"
+  },
+  "[properties]": {
+    "editor.defaultFormatter": "lumirelle.shell-format-rev"
+  },
   "[shellscript]": {
-    "editor.defaultFormatter": "foxundermoon.shell-format"
+    "editor.defaultFormatter": "lumirelle.shell-format-rev",
+    "editor.insertSpaces": false
   }
 }
