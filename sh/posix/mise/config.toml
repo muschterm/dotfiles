@@ -3,7 +3,8 @@ usage = "latest"
 node = "24"
 bun = "1"
 deno = "2"
-java = "oracle-25"
+# java = "oracle-25"
+java = "graalvm-community-25"
 maven = "latest"
 gradle = "latest"
 eza = "latest"
@@ -13,3 +14,10 @@ neovim = "latest"
 lazydocker = "latest"
 lazygit = "latest"
 fd = "latest"
+
+#
+# Example custom HTTP download of cli program using the http tool
+#
+# [tools."http:test-cli"]
+# version = "1.0.0"
+# url = 'https://my-test-cli.net/my/test/cli/{{ version }}/my-test-cli-{{ version }}-{{ os(macos="darwin") }}-{{ arch(x64="amd64") }}.{{ os(windows="zip",linux="tar.gz",macos="tar.gz") }}'
