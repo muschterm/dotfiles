@@ -1,5 +1,12 @@
 if command -v mise >/dev/null 2>&1; then
-	eval "$(mise activate bash)"
+	case $- in
+		*i*)
+			eval "$(mise activate bash)" 
+			;;
+		*)
+			eval "$(mise activate bash --shims)" 
+			;;
+	esac
 
 	if typeset -f __df-set-completions-bash >/dev/null 2>&1; then
 		df-set-completions-mise() {
