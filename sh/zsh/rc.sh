@@ -77,6 +77,11 @@ fi
 . "$DOTFILES_DIR/sh/posix/node/rc.sh"
 . "$DOTFILES_DIR/sh/zsh/node/rc.sh"
 
+. "$DOTFILES_DIR/sh/zsh/codex/rc.sh"
+
+. "$DOTFILES_DIR/sh/posix/claude/rc.sh"
+. "$DOTFILES_DIR/sh/zsh/claude/rc.sh"
+
 . "$DOTFILES_DIR/sh/posix/quarkus/rc.sh"
 
 ##########################

@@ -1,6 +1,6 @@
 [tools]
 usage = "latest"
-node = "24"
+node = "26"
 bun = "1"
 deno = "2"
 # java = "oracle-25"
