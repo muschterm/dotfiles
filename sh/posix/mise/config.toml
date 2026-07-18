@@ -5,6 +5,7 @@ bun = "1"
 deno = "2"
 # java = "oracle-25"
 java = "graalvm-community-25"
+go = "latest"
 maven = "latest"
 gradle = "latest"
 eza = "latest"
@@ -14,6 +15,7 @@ neovim = "latest"
 lazydocker = "latest"
 lazygit = "latest"
 fd = "latest"
+herdr = "latest"
 
 #
 # Example custom HTTP download of cli program using the http tool

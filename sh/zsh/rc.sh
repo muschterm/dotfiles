@@ -62,6 +62,8 @@ fi
 . "$DOTFILES_DIR/sh/posix/starship/rc.sh"
 . "$DOTFILES_DIR/sh/zsh/starship/rc.sh"
 
+. "$DOTFILES_DIR/sh/zsh/herdr/rc.sh"
+
 . "$DOTFILES_DIR/sh/zsh/docker/rc.sh"
 
 . "$DOTFILES_DIR/sh/posix/jb-toolbox/rc.sh"
