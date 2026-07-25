@@ -3,22 +3,69 @@ compress() { tar -czf "${1%/}.tar.gz" "${1%/}"; }
 alias decompress="tar -xzf"
 
 # Write iso file to sd card
-iso2sd() {
+iso2sd() (
 	if [ $# -ne 2 ]; then
-		cat <<-HERE
-			Usage: iso2sd <input_file> <output_device>
-			Example: iso2sd ~/Downloads/ubuntu-25.04-desktop-amd64.iso /dev/sda
-		HERE
+		if [ "$DF_OS" = "$DF_OS_MACOS" ]; then
+			cat <<-HERE
+				Usage: iso2sd <input_file> <output_device>
+				Example: iso2sd ~/Downloads/foo.iso /dev/disk4
+			HERE
 
-		if [ "$DF_OS" = "$DF_OS_LINUX" ]; then
+			printf -- "\nAvailable SD cards:\n"
+			diskutil list external physical
+		else
+			cat <<-HERE
+				Usage: iso2sd <input_file> <output_device>
+				Example: iso2sd ~/Downloads/foo.iso /dev/sda
+			HERE
+
 			printf -- "\nAvailable SD cards:\n"
 			lsblk -d -o NAME | grep -E '^sd[a-z]' | awk '{print "/dev/"$1}'
 		fi
-	else
-		sudo dd bs=4M status=progress oflag=sync if="$1" of="$2"
-		sudo eject $2
+
+		return 1
 	fi
-}
+
+	if [ ! -f "$1" ]; then
+		printf -- "No such input file: %s\n" "$1" >&2
+		return 1
+	fi
+
+	# sudo resets PATH, so resolve dd here and run it by absolute path;
+	# coreutils on macos provides gnu dd as gdd, which reports progress
+	iso_dd="$(command -v gdd || command -v dd)"
+
+	if [ "$DF_OS" = "$DF_OS_MACOS" ]; then
+		# accept disk4, /dev/disk4 or /dev/rdisk4 -- diskutil wants the buffered
+		# device while dd is much faster against the raw one, which also skips
+		# the buffer cache and makes oflag=sync pointless
+		iso_disk="${2#/dev/}"
+		iso_disk="${iso_disk#r}"
+		iso_device="/dev/r$iso_disk"
+		iso_disk="/dev/$iso_disk"
+
+		diskutil unmountDisk "$iso_disk" || return 1
+	else
+		iso_device="$2"
+	fi
+
+	# bs=4M is understood by both, the rest is gnu only
+	if ! "$iso_dd" --version >/dev/null 2>&1; then
+		printf -- "Writing %s to %s, press ctrl-t for progress...\n" "$1" "$iso_device"
+		sudo "$iso_dd" bs=4M if="$1" of="$iso_device"
+	elif [ "$DF_OS" = "$DF_OS_MACOS" ]; then
+		sudo "$iso_dd" bs=4M status=progress if="$1" of="$iso_device"
+	else
+		sudo "$iso_dd" bs=4M status=progress oflag=sync if="$1" of="$iso_device"
+	fi || return 1
+
+	if [ "$DF_OS" = "$DF_OS_MACOS" ]; then
+		sync
+		diskutil eject "$iso_disk"
+	else
+		sudo eject "$2"
+	fi
+)
 
 if [ "$DF_OS" = "$DF_OS_LINUX" ]; then
 
