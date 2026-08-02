@@ -82,6 +82,7 @@ fi
 . "$DOTFILES_DIR/sh/posix/node/rc.sh"
 . "$DOTFILES_DIR/sh/bash/node/rc.sh"
 
+. "$DOTFILES_DIR/sh/posix/codex/rc.sh"
 . "$DOTFILES_DIR/sh/bash/codex/rc.sh"
 
 . "$DOTFILES_DIR/sh/posix/claude/rc.sh"
