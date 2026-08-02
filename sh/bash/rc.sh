@@ -4,6 +4,11 @@
 # Shared
 ##########################
 
+# the DF_SETUP_* feature flags. bash has no ~/.zshenv equivalent - nothing is
+# read before ~/.bashrc - so this is where they get loaded; it has to come first
+# because everything below branches on those flags.
+[ -f "$HOME/.dfenv" ] && . "$HOME/.dfenv"
+
 . "$DOTFILES_DIR/sh/posix/envs.sh"
 . "$DOTFILES_DIR/sh/posix/shell.sh"
 . "$DOTFILES_DIR/sh/posix/functions.sh"

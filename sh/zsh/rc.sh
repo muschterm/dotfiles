@@ -9,6 +9,9 @@ setopt appendhistory
 # Shared
 ##########################
 
+# the DF_SETUP_* feature flags come from ~/.dfenv, sourced by ~/.zshenv -
+# see install-zsh. zsh reads that before .zshrc, so they are already set by the
+# time this file runs (bash has no equivalent and sources it in sh/bash/rc.sh).
 . "$DOTFILES_DIR/sh/posix/envs.sh"
 . "$DOTFILES_DIR/sh/posix/shell.sh"
 . "$DOTFILES_DIR/sh/posix/functions.sh"

@@ -12,9 +12,11 @@ Repository that includes helpful terminal setup scripts.
 
 ## User Shell
 
-Using the `install-*sh` script will set up the user's shell to leverage the `init` script.
+Using the `install-*sh` script will set up the user's shell to leverage the `init` script. Both write `$HOME/.dfrc` - a single entry point that sets `DOTFILES_DIR` and loads the rc for whichever shell is running - and point `$HOME/.zshrc` / `$HOME/.bashrc` at it.
 
 Both `zsh` and `bash` are supported - `zsh` being the preferred script.
+
+Per-machine settings live in `$HOME/.dfenv` (see `example.dfenv`) - the `DF_SETUP_*` feature flags that decide which software the shell sets up. `zsh` sources it from `$HOME/.zshenv`; `bash` has no equivalent, so it is sourced from `sh/bash/rc.sh` instead. Either way it is the only place these need to be set.
 
 ### Default Configurations
 

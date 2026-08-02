@@ -1,15 +1,10 @@
 #!/usr/bin/env zsh
 
-cat <<-HERE
-	-------------------------------------------------------------------------------
-	Installing dotfiles!
-	-------------------------------------------------------------------------------
-
-HERE
-
 dotfiles_dir="${0:a:h}"
 
-ln -snf "$dotfiles_dir/.tmux.conf" "$HOME/.tmux.conf"
+. "$dotfiles_dir/scripts/install-lib.sh"
+
+df-install-banner
 
 if [ ! -z "$DOCKER_IMAGE_NAME" ]; then
 	ln -snf "$dotfiles_dir/sh/zsh/rc.sh" "/etc/profile.d/dotfiles.zshrc.sh"
@@ -19,62 +14,30 @@ elif [ "$(uname -s)" = "Linux" ] || [ "$(uname -s)" = "Darwin" ]; then
 		touch "$HOME/.zprofile"
 	fi
 
-	if [ ! -f "$HOME/.zshrc" ]; then
-		touch "$HOME/.zshrc"
-	fi
+	# the pre-rename installs wrote bare, unmarked lines - drop them so the
+	# upgrade does not leave a line pointing at a file that no longer exists
+	for df_legacy in "$HOME/.zshenv" "$HOME/.zshrc"; do
+		if [ -f "$df_legacy" ]; then
+			mv "$df_legacy" "$df_legacy.bak"
+			sed -e "/\.dotfiles\.env/d" -e "/\.dotfiles\.zsh/d" -e "/\.dfzsh/d" \
+				"$df_legacy.bak" >"$df_legacy"
+		fi
+	done
+	unset df_legacy
 
-	zshrc_line="$(grep -n ".dotfiles.zsh" "$HOME/.zshrc" | awk -F ":" '{print $1}')"
-
-	if [ ! -z "$zshrc_line" ]; then
-		# delete old lines in .zshrc
-		mv "$HOME/.zshrc" "$HOME/.zshrc.bak"
-		sed "${zshrc_line},${zshrc_line}d" "$HOME/.zshrc.bak" >"$HOME/.zshrc"
-	fi
-
-	# add to bottom of .zshrc
-	cat <<-HERE >>"$HOME/.zshrc"
-		[ -f "\$HOME/.dotfiles.zsh" ] && . "\$HOME/.dotfiles.zsh"
+	# .zshenv is read by every zsh, interactive or not, so the DF_SETUP_* flags
+	# in .dfenv are in scope everywhere - not just where rc.sh runs
+	df-install-block "$HOME/.zshenv" <<-HERE
+		[ -f "\$HOME/.dfenv" ] && . "\$HOME/.dfenv"
 	HERE
 
-	if [ ! -f "$HOME/.dotfiles.zsh" ]; then
-		touch "$HOME/.dotfiles.zsh"
-	fi
-
-	dotfiles_zsh_line="$(grep -n "export DOTFILES_DIR" "$HOME/.dotfiles.zsh" | awk -F ":" '{print $1}')"
-
-	if [ ! -z "$dotfiles_zsh_line" ]; then
-		# delete old lines in .dotfiles.zsh
-		mv "$HOME/.dotfiles.zsh" "$HOME/.dotfiles.zsh.bak"
-		sed "${dotfiles_zsh_line},${dotfiles_zsh_line}d" "$HOME/.dotfiles.zsh.bak" >"$HOME/.dotfiles.zsh"
-	fi
-
-	# add to top of .dotfiles.zsh
-	cat <<-HERE >"$HOME/.dotfiles.zsh.tmp"
-		export DOTFILES_DIR="$dotfiles_dir"; [ -f "\$DOTFILES_DIR/sh/zsh/rc.sh" ] && . "\$DOTFILES_DIR/sh/zsh/rc.sh"
+	df-install-block "$HOME/.zshrc" <<-HERE
+		[ -f "\$HOME/.dfrc" ] && . "\$HOME/.dfrc"
 	HERE
-	cat "$HOME/.dotfiles.zsh" >>"$HOME/.dotfiles.zsh.tmp"
-	mv "$HOME/.dotfiles.zsh.tmp" "$HOME/.dotfiles.zsh"
 
-	if [ "$(uname -s)" = "Linux" ]; then
-		cat <<-HERE
-			"$HOME/.zprofile" and "$HOME/.zshrc" have been updated!
-			Please log out and log back in for changes to take affect.
-		HERE
-	else
-		# Non-Linux OS's handle .profile during shell startup rather than a real user
-		# login. Any new terminal windows will automatically source the user's updated
-		# .profile. Ensure the current terminal window has the .profile sourced.
+	. "$dotfiles_dir/scripts/install-common.sh"
 
-		cat <<-HERE
-			"$HOME/.zprofile" and "$HOME/.zshrc" have been updated!
-			Please close and open a new terminal window for changes to take affect.
-		HERE
-	fi
+	df-install-updated "$HOME/.zshenv" "$HOME/.zshrc" "$HOME/.dfrc"
 fi
 
-cat <<-HERE
-
-	-------------------------------------------------------------------------------
-	Finished!
-	-------------------------------------------------------------------------------
-HERE
+df-install-finished
