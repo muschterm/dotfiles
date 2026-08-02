@@ -101,7 +101,7 @@ fi
 
 if typeset -f __df-set-completions-bash >/dev/null 2>&1; then
 	for f in "$DF_BASH_COMPLETIONS_DIR"/_*; do
-		[ -r $f && -f $f ] || continue
+		[ -r "$f" ] && [ -f "$f" ] || continue
 		. "$f"
 	done
 fi

@@ -1,10 +1,10 @@
 if command -v mise >/dev/null 2>&1; then
 	case $- in
 		*i*)
-			eval "$(mise activate zsh)" 
+			eval "$(mise activate zsh)"
 			;;
 		*)
-			eval "$(mise activate zsh --shims)" 
+			eval "$(mise activate zsh --shims)"
 			;;
 	esac
 

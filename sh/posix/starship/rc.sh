@@ -1,7 +1,7 @@
 : ${DF_SETUP_STARSHIP:="true"}
 if [ "${DF_SETUP_STARSHIP}" = "true" ]; then
 	export STARSHIP_HOME="$DF_SOFTWARE_HOME/starship"
-	export PATH="$STARSHIP_HOME/bin:$PATH"
+	df-path-prepend "$STARSHIP_HOME/bin"
 	export STARSHIP_CONFIG="$DOTFILES_DIR/sh/posix/starship/starship.toml"
 
 	if ! command -v starship >/dev/null 2>&1; then

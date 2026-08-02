@@ -19,17 +19,17 @@ if command -v eza >/dev/null 2>&1; then
 else
 	if [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 		if command -v gls >/dev/null 2>&1; then
-			alias -g ls.command="gls --group-directories-first"
+			alias ls="gls --group-directories-first -X --color=auto"
 		elif command -v coreutils >/dev/null 2>&1; then
-			alias -g ls.command="coreutils ls --group-directories-first"
+			alias ls="coreutils ls --group-directories-first -X --color=auto"
 		else
-			alias -g ls.command="ls"
+			# BSD ls: no -X and no --color
+			alias ls="ls -G"
 		fi
 	elif [ "$DF_OS" = "$DF_OS_LINUX" ]; then
-		alias -g ls.command="ls --group-directories-first"
+		alias ls="ls --group-directories-first -X --color=auto"
 	fi
 
-	alias ls="ls.command -X --color"
 	alias la="ls -Al"
 fi
 

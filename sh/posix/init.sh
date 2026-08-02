@@ -1,12 +1,17 @@
 # Add dotfiles /bin to PATH
-export PATH="$DOTFILES_DIR/bin:$PATH"
+df-path-prepend "$DOTFILES_DIR/bin"
 
 if [ "$DF_OS" = "$DF_OS_LINUX" ]; then
 	if [ "$DF_WSL" = "true" ]; then
 		# always start in linux home directory
 		# the linux file system is better performing and where
 		# most, if not all, WSL work should be done
-		cd "$HOME"
+		#
+		# interactive shells only; a non-interactive shell (scripts, IDE
+		# tooling) has to keep the cwd it was invoked with
+		case $- in
+		*i*) cd "$HOME" ;;
+		esac
 
 		# only if not using Windows 11 WSLG capability
 		if [ ! -d "/mnt/wslg" ]; then
@@ -43,8 +48,8 @@ elif [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 		local_brew_prefix="$(brew --prefix)"
 
 		# GNU coreutils
-		export PATH="${local_brew_prefix}/opt/coreutils/libexec/gnubin:$PATH"
-		export MANPATH="${local_brew_prefix}/opt/coreutils/libexec/gnuman:$MANPATH"
+		df-path-prepend "${local_brew_prefix}/opt/coreutils/libexec/gnubin"
+		df-manpath-prepend "${local_brew_prefix}/opt/coreutils/libexec/gnuman"
 		if [ ! -d "${local_brew_prefix}/opt/coreutils/libexec/gnubin" ]; then
 			cat <<-HERE
 				Homebrew 'coreutils' not installed!
@@ -60,8 +65,8 @@ elif [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 		fi
 
 		# GNU sed
-		export PATH="${local_brew_prefix}/opt/gnu-sed/libexec/gnubin:$PATH"
-		export MANPATH="${local_brew_prefix}/opt/gnu-sed/libexec/gnuman:$MANPATH"
+		df-path-prepend "${local_brew_prefix}/opt/gnu-sed/libexec/gnubin"
+		df-manpath-prepend "${local_brew_prefix}/opt/gnu-sed/libexec/gnuman"
 		if [ ! -d "${local_brew_prefix}/opt/gnu-sed/libexec/gnubin" ]; then
 			cat <<-HERE
 				Homebrew 'gnu-sed' not installed!
@@ -77,8 +82,8 @@ elif [ "$DF_OS" = "$DF_OS_MACOS" ]; then
 		fi
 
 		# GNU tar
-		export PATH="${local_brew_prefix}/opt/gnu-tar/libexec/gnubin:$PATH"
-		export MANPATH="${local_brew_prefix}/opt/gnu-tar/libexec/gnuman:$PATH"
+		df-path-prepend "${local_brew_prefix}/opt/gnu-tar/libexec/gnubin"
+		df-manpath-prepend "${local_brew_prefix}/opt/gnu-tar/libexec/gnuman"
 		if [ ! -d "${local_brew_prefix}/opt/gnu-tar/libexec/gnubin" ]; then
 			cat <<-HERE
 				Homebrew 'gnu-tar' not installed!

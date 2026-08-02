@@ -13,7 +13,7 @@ df-install-jb-toolbox() (
 		elif [ "$DF_OS" = "$DF_OS_LINUX" ]; then
 			suffix=".tar.gz"
 		elif [ "$DF_OS" = "$DF_OS_MACOS" ]; then
-			if [ "$DF_ARCH" = "$DF_ARCH_ARM64" ]; then
+			if [ "$DF_ARCH" = "$DF_ARCH_ARM_64" ]; then
 				suffix="-arm64.dmg"
 			else
 				suffix=".dmg"

@@ -6,10 +6,7 @@ if [ "${DF_SETUP_CLAUDE}" = "true" ]; then
 
 	# since claude currently installs to a common .local/bin
 	# ensure it's not already on the path
-	case ":$PATH:" in
-		*":$CLAUDE_HOME:"*) ;;
-		*) export PATH="$CLAUDE_HOME:$PATH" ;;
-	esac
+	df-path-prepend "$CLAUDE_HOME"
 
 	if ! command -v claude >/dev/null 2>&1; then
 		cat <<-HERE

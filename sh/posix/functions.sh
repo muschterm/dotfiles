@@ -1,3 +1,23 @@
+# Prepend a directory to PATH/MANPATH only if it is not already present, so
+# re-sourcing an rc file does not keep growing the variable.
+df-path-prepend() {
+	[ -n "$1" ] || return 0
+	case ":$PATH:" in
+	*":$1:"*) ;;
+	*) PATH="$1:$PATH" ;;
+	esac
+	export PATH
+}
+
+df-manpath-prepend() {
+	[ -n "$1" ] || return 0
+	case ":$MANPATH:" in
+	*":$1:"*) ;;
+	*) MANPATH="$1:$MANPATH" ;;
+	esac
+	export MANPATH
+}
+
 # Compression
 compress() { tar -czf "${1%/}.tar.gz" "${1%/}"; }
 alias decompress="tar -xzf"
@@ -99,7 +119,7 @@ if [ "$DF_OS" = "$DF_OS_LINUX" ]; then
 				;;
 			*)
 				printf -- "skipped\n"
-				exit 0
+				return 0
 				;;
 			esac
 		fi
@@ -134,7 +154,9 @@ df-user-install-software() (
 	soft_zip_prefix=
 	soft_dmg_app=
 	soft_save_download_file=true
-	while [ -z "${1%%-*}" ]; do # while [ "${1:0:1}" = "-" ] || [ "${1:0:2}" = "--" ]
+	# loop while $1 still looks like an option; the $# guard stops this spinning
+	# forever when called with no arguments at all
+	while [ $# -gt 0 ] && [ -z "${1%%-*}" ]; do
 		case $1 in
 		"--home")
 			shift
@@ -163,8 +185,10 @@ df-user-install-software() (
 			;;
 		"--")
 			shift
+			break
 			;;
-		*) ;;
+		# unknown option: stop rather than loop forever without shifting
+		*) break ;;
 		esac
 	done
 
