@@ -13,6 +13,15 @@ case "$(uname -r)" in
 *) ;;
 esac
 
+# omarchy owns a lot of the toolchain itself (mise, ~/.local/bin shims, ...) so
+# modules need to know when to stay out of its way. os-release rather than the
+# "-omarchy" kernel suffix - that only holds while booted into omarchy's kernel.
+# OMARCHY_PATH covers sessions that already sourced omarchy's env-bootstrap
+DF_OMARCHY="false"
+if [ -n "$OMARCHY_PATH" ] || { [ -r "/etc/os-release" ] && grep -q '^ID=omarchy$' "/etc/os-release"; }; then
+	DF_OMARCHY="true"
+fi
+
 case "$(uname -s)" in
 "Linux")
 	DF_OS=$DF_OS_LINUX
